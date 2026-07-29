@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.graphics.Color
 import android.inputmethodservice.InputMethodService
@@ -16,7 +16,7 @@ import android.widget.TextView
  * 这里存在一个「键盘」。它不打字：没有键位，只有一条状态栏和一个「换回
  * 我的键盘」。填入之后发送键仍然由机主自己按。
  */
-class ZuitiKeyboardService : InputMethodService() {
+class AplombKeyboard : InputMethodService() {
 
     private var status: TextView? = null
 
@@ -84,7 +84,7 @@ class ZuitiKeyboardService : InputMethodService() {
         private const val MAX_CLEAR = 2000
 
         @Volatile
-        var instance: ZuitiKeyboardService? = null
+        var instance: AplombKeyboard? = null
             private set
 
         val isActive: Boolean get() = instance != null

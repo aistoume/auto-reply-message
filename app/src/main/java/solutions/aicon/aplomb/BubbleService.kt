@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -43,9 +43,9 @@ class BubbleService : Service() {
     companion object {
         const val EXTRA_RESULT_CODE = "result_code"
         const val EXTRA_RESULT_DATA = "result_data"
-        const val ACTION_STOP = "solutions.aicon.zuiti.STOP"
-        const val ACTION_GRANT_AND_CAPTURE = "solutions.aicon.zuiti.GRANT_AND_CAPTURE"
-        private const val CHANNEL_ID = "zuiti_bubble"
+        const val ACTION_STOP = "solutions.aicon.aplomb.STOP"
+        const val ACTION_GRANT_AND_CAPTURE = "solutions.aicon.aplomb.GRANT_AND_CAPTURE"
+        private const val CHANNEL_ID = "aplomb_bubble"
         private const val NOTIF_ID = 2001
 
         @Volatile
@@ -254,7 +254,7 @@ class BubbleService : Service() {
         Prefs.setLastTone(this, tone.id)
         ReplyCard.showStatus(this, windowManager, getString(R.string.card_thinking, tone.name))
         scope.launch {
-            val draft = withContext(Dispatchers.IO) { ZuitiEngine.draft(this@BubbleService, b64, tone) }
+            val draft = withContext(Dispatchers.IO) { ReplyEngine.draft(this@BubbleService, b64, tone) }
             if (draft == null) {
                 ReplyCard.showStatus(this@BubbleService, windowManager, getString(R.string.card_failed))
                 return@launch
@@ -270,7 +270,7 @@ class BubbleService : Service() {
 
     /** 通过嘴替键盘把正文填进当前输入框；发送键仍由机主自己按。 */
     private fun insert(text: String) {
-        val kbd = ZuitiKeyboardService.instance
+        val kbd = AplombKeyboard.instance
         if (kbd == null) {
             toast(getString(R.string.need_keyboard))
             runCatching {

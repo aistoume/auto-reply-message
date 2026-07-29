@@ -1,10 +1,10 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.content.Context
 import org.json.JSONObject
-import solutions.aicon.zuiti.ai.AnthropicClient
-import solutions.aicon.zuiti.ai.GeminiClient
-import solutions.aicon.zuiti.ai.OpenAIClient
+import solutions.aicon.aplomb.ai.AnthropicClient
+import solutions.aicon.aplomb.ai.GeminiClient
+import solutions.aicon.aplomb.ai.OpenAIClient
 
 /**
  * 嘴替引擎 —— 把一屏聊天变成「能发出去」的一句话。
@@ -17,7 +17,7 @@ import solutions.aicon.zuiti.ai.OpenAIClient
  *   • 回复正文 → 跟对方说的语言走（对方发英文就回英文）
  *   • 分析/建议 → 一律用机主自己的语言，机主永远读母语
  */
-object ZuitiEngine {
+object ReplyEngine {
 
     class Draft(
         /** 对方使用的语言（BCP-47 或语言名，仅供展示）。 */

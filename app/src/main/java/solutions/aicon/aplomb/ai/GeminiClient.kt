@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti.ai
+package solutions.aicon.aplomb.ai
 
 import android.util.Base64
 import okhttp3.MediaType.Companion.toMediaType

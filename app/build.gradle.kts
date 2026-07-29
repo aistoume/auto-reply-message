@@ -12,11 +12,11 @@ val keystoreProps = Properties().apply {
 }
 
 android {
-    namespace = "solutions.aicon.zuiti"
+    namespace = "solutions.aicon.aplomb"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "solutions.aicon.zuiti"
+        applicationId = "solutions.aicon.aplomb"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

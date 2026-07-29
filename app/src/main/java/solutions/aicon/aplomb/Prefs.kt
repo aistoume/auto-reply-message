@@ -1,10 +1,10 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.content.Context
 
 /** 机主的设置 —— 全部只存在本机。 */
 object Prefs {
-    private const val FILE = "zuiti"
+    private const val FILE = "aplomb"
 
     const val PROVIDER_ANTHROPIC = "anthropic"
     const val PROVIDER_OPENAI = "openai"

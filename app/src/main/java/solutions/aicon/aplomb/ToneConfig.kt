@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.content.Context
 import org.json.JSONArray
@@ -36,7 +36,7 @@ class Tone(
 }
 
 object ToneConfig {
-    private const val FILE = "zuiti"
+    private const val FILE = "aplomb"
     private const val KEY = "tones_v1"
 
     /** 出厂四档。名称走 string 资源，所以中英界面各自成立。 */

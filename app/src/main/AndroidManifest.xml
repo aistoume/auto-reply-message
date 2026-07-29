@@ -13,7 +13,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Zuiti">
+        android:theme="@style/Theme.Aplomb">
 
         <activity
             android:name=".MainActivity"
@@ -45,7 +45,7 @@
 
         <!-- 嘴替键盘：把选中的回复写进当前输入框（发送仍由用户自己按） -->
         <service
-            android:name=".ZuitiKeyboardService"
+            android:name=".AplombKeyboard"
             android:exported="true"
             android:label="@string/kbd_name"
             android:permission="android.permission.BIND_INPUT_METHOD">

@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti.ai
+package solutions.aicon.aplomb.ai
 
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Zuiti</string>
+    <string name="app_name">Aplomb</string>
     <string name="tagline">Says the hard messages for you</string>
 
     <string name="sec_run">Run</string>
     <string name="btn_start">▶ Start the bubble</string>
     <string name="btn_stop">■ Stop the bubble</string>
-    <string name="kbd_enable">⌨ Enable the Zuiti keyboard (to insert replies)</string>
-    <string name="kbd_on">⌨ Zuiti keyboard: enabled ✓</string>
-    <string name="kbd_howto">Turn on “Zuiti keyboard” in the input-method list</string>
-    <string name="kbd_name">Zuiti keyboard</string>
-    <string name="kbd_hint">Zuiti · tap “Insert” on the reply card to drop text here</string>
+    <string name="kbd_enable">⌨ Enable the Aplomb keyboard (to insert replies)</string>
+    <string name="kbd_on">⌨ Aplomb keyboard: enabled ✓</string>
+    <string name="kbd_howto">Turn on “Aplomb keyboard” in the input-method list</string>
+    <string name="kbd_name">Aplomb keyboard</string>
+    <string name="kbd_hint">Aplomb · tap “Insert” on the reply card to drop text here</string>
     <string name="kbd_hand_back">Back to my keyboard</string>
 
     <string name="sec_ai">AI</string>
@@ -63,14 +63,14 @@
 
     <string name="need_key">Add an API key in settings first</string>
     <string name="need_overlay">Grant “display over other apps” first</string>
-    <string name="need_keyboard">Enable the Zuiti keyboard and switch to it</string>
+    <string name="need_keyboard">Enable the Aplomb keyboard and switch to it</string>
     <string name="no_input_field">No input field — tap the chat\'s text box first</string>
     <string name="inserted">Inserted — check it, then hit send yourself</string>
     <string name="bubble_on">Bubble is up</string>
     <string name="bubble_off">Bubble stopped</string>
     <string name="consent_needed">Screen sharing is needed to read the chat</string>
     <string name="projection_expired">Grant expired — tap the bubble again</string>
-    <string name="notif_title">Zuiti is standing by</string>
+    <string name="notif_title">Aplomb is standing by</string>
     <string name="notif_text">Tap the bubble to read the chat and draft a reply</string>
     <string name="notif_stop">Stop</string>
 </resources>

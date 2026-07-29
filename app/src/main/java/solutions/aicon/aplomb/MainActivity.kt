@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.Manifest
 import android.content.Context
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         kbdBtn.text = getString(
-            if (ZuitiKeyboardService.isActive) R.string.kbd_on else R.string.kbd_enable
+            if (AplombKeyboard.isActive) R.string.kbd_on else R.string.kbd_enable
         )
     }
 

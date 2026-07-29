@@ -1,10 +1,10 @@
-# 嘴替 · Zuiti
+# 嘴替 · Aplomb
 
 **难回的消息，替你说出口。**
 
 站在聊天界面上点一下悬浮球，选一个语气，AI 读懂这一屏在说什么，替你写出能直接发出去的那句话。
 
-<img width="240" alt="嘴替" src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png">
+<img width="240" alt="Aplomb" src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png">
 
 ---
 

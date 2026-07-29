@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -43,7 +43,7 @@ object ReplyCard {
     fun show(
         c: Context,
         wm: WindowManager,
-        draft: ZuitiEngine.Draft?,
+        draft: ReplyEngine.Draft?,
         activeTone: Tone?,
         status: String?,
         tones: List<Tone>,
@@ -146,7 +146,7 @@ object ReplyCard {
             })
             actions.addView(pill(c, c.getString(R.string.card_copy), Color.rgb(63, 63, 70)) {
                 (c.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager)
-                    .setPrimaryClip(ClipData.newPlainText("zuiti", draft.reply))
+                    .setPrimaryClip(ClipData.newPlainText("aplomb", draft.reply))
                 Toast.makeText(c, R.string.card_copied, Toast.LENGTH_SHORT).show()
             })
             card.addView(actions)

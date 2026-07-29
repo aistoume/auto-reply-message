@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

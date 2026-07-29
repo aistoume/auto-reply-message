@@ -1,4 +1,4 @@
-package solutions.aicon.zuiti
+package solutions.aicon.aplomb
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -74,7 +74,7 @@ class ScreenCaptureManager(
         }, main)
         return runCatching {
             display = projection.createVirtualDisplay(
-                "zuiti-capture", width, height, density,
+                "aplomb-capture", width, height, density,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 ir.surface, null, main
             )
