@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zuiti</string>
+    <string name="tagline">Says the hard messages for you</string>
+
+    <string name="sec_run">Run</string>
+    <string name="btn_start">▶ Start the bubble</string>
+    <string name="btn_stop">■ Stop the bubble</string>
+    <string name="kbd_enable">⌨ Enable the Zuiti keyboard (to insert replies)</string>
+    <string name="kbd_on">⌨ Zuiti keyboard: enabled ✓</string>
+    <string name="kbd_howto">Turn on “Zuiti keyboard” in the input-method list</string>
+    <string name="kbd_name">Zuiti keyboard</string>
+    <string name="kbd_hint">Zuiti · tap “Insert” on the reply card to drop text here</string>
+    <string name="kbd_hand_back">Back to my keyboard</string>
+
+    <string name="sec_ai">AI</string>
+    <string name="provider_anthropic">Anthropic Claude (best at reading subtext)</string>
+    <string name="provider_openai">OpenAI GPT</string>
+    <string name="provider_gemini">Google Gemini (free tier available)</string>
+    <string name="provider_openrouter">OpenRouter (free models)</string>
+    <string name="paste">📋 Paste</string>
+    <string name="key_saved">🔑 Saved (…%1$s) — tap to change</string>
+    <string name="clipboard_empty">Clipboard is empty</string>
+
+    <string name="sec_lang">My language</string>
+    <string name="lang_help">Subtext and advice are always written to you in this language; the reply itself follows whatever language the other person is using.</string>
+    <string name="lang_hint">English / 中文 / 日本語…</string>
+
+    <string name="sec_persona">Who I am</string>
+    <string name="persona_help">Your role, how you talk, your limits. Shapes every tone.</string>
+    <string name="persona_hint">e.g. freelance designer, terse and dry, no unpaid revisions</string>
+
+    <string name="sec_tones">Tones</string>
+    <string name="tones_help">The wheel that opens from the bubble. Tap one to edit; up to 6.</string>
+    <string name="tone_add">＋ Add a tone</string>
+    <string name="tone_edit">Edit tone</string>
+    <string name="tone_delete">Delete</string>
+    <string name="tone_reset">Restore default tones</string>
+    <string name="tone_full">6 tones is the maximum</string>
+    <string name="tone_need_one">Keep at least one tone</string>
+    <string name="tone_incomplete">Name and guidance are both required</string>
+    <string name="tone_emoji_hint">Icon emoji</string>
+    <string name="tone_name_hint">Tone name, e.g. “Gracious”</string>
+    <string name="tone_guidance_hint">How this tone talks (written for the AI)</string>
+
+    <string name="tone_decent">Gracious</string>
+    <string name="tone_decent_guidance">Keep the relationship, leave room, easy for them to accept. Move things forward without litigating the past — but don\'t silently agree to anything they left vague.</string>
+    <string name="tone_needle">Pointed</string>
+    <string name="tone_needle_guidance">Put the problem on the table, hold the line, neither fight nor fold. Speak in concrete facts, numbers and dates so they see the cost themselves. Stay polite throughout.</string>
+    <string name="tone_table">Hard line</string>
+    <string name="tone_table_guidance">State the rule, stop conceding, accept that this may end the relationship. Still only facts and consequences — no profanity, no personal attacks, no threats.</string>
+    <string name="tone_cool">Hold off</string>
+    <string name="tone_cool_guidance">Don\'t commit, don\'t take the bait, keep the decision yours. Short, calm, no explaining, no promises — buy yourself time.</string>
+
+    <string name="card_thinking">Drafting in “%1$s”…</string>
+    <string name="card_failed">Couldn\'t read that screen — try again from another angle</string>
+    <string name="card_subtext">Subtext: %1$s</string>
+    <string name="card_risk">⚠ %1$s</string>
+    <string name="card_note">Note: %1$s</string>
+    <string name="card_insert">Insert</string>
+    <string name="card_copy">Copy</string>
+    <string name="card_copied">Copied</string>
+
+    <string name="need_key">Add an API key in settings first</string>
+    <string name="need_overlay">Grant “display over other apps” first</string>
+    <string name="need_keyboard">Enable the Zuiti keyboard and switch to it</string>
+    <string name="no_input_field">No input field — tap the chat\'s text box first</string>
+    <string name="inserted">Inserted — check it, then hit send yourself</string>
+    <string name="bubble_on">Bubble is up</string>
+    <string name="bubble_off">Bubble stopped</string>
+    <string name="consent_needed">Screen sharing is needed to read the chat</string>
+    <string name="projection_expired">Grant expired — tap the bubble again</string>
+    <string name="notif_title">Zuiti is standing by</string>
+    <string name="notif_text">Tap the bubble to read the chat and draft a reply</string>
+    <string name="notif_stop">Stop</string>
+</resources>

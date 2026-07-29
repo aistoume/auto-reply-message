@@ -1,0 +1,31 @@
+<!-- 悬浮球：新品牌（F1-v2a）圆形版 — 深蓝底 + 金色 AI 星标 + 青伴星。
+     也用作前台服务通知小图标（系统取 alpha 剪影）。 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="56dp" android:height="56dp"
+    android:viewportWidth="128" android:viewportHeight="128">
+    <!-- circular navy background -->
+    <path android:pathData="M64,4 A60,60 0 1,0 64,124 A60,60 0 1,0 64,4 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startColor="#324664" android:endColor="#25344E"
+                android:startX="64" android:startY="4"
+                android:endX="64" android:endY="124" android:type="linear"/>
+        </aapt:attr>
+    </path>
+    <!-- faint network diamond behind the star -->
+    <path android:pathData="M60,26 L26,60 M68,26 L102,60 M26,68 L60,102 M102,68 L68,102"
+        android:strokeColor="#55FFFFFF" android:strokeWidth="4"
+        android:strokeLineCap="round"/>
+    <path android:pathData="M64,20 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0
+        M64,108 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0
+        M20,64 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0
+        M108,64 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0"
+        android:fillColor="#66FFFFFF"/>
+    <!-- golden AI star -->
+    <path android:pathData="M64,26 L72,56 L102,64 L72,72 L64,102 L56,72 L26,64 L56,56 Z"
+        android:fillColor="#FBBB37"/>
+    <!-- cyan companion star -->
+    <path android:pathData="M96,22 L99.5,32.5 L110,36 L99.5,39.5 L96,50 L92.5,39.5 L82,36 L92.5,32.5 Z"
+        android:fillColor="#3FCCDD"/>
+</vector>
