@@ -103,6 +103,10 @@ final class DraftModel: ObservableObject {
             if let parsed = ReplyEngine.parse(raw) {
                 draft = parsed
                 status = nil
+                // 交给键盘：用户切到嘴替键盘时，这一稿已经在那儿等着了
+                SharedDrafts.push(.init(
+                    toneEmoji: tone.emoji, toneName: tone.name, text: parsed.reply
+                ))
             } else {
                 status = "没读懂这屏内容，换个角度再试一次"
             }
