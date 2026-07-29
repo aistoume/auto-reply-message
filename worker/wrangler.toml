@@ -1,0 +1,15 @@
+# Aplomb 免费电池 —— 服务端 Claude 代理（视觉），按格数计费。
+# Anthropic key 是 secret，不进这个文件：
+#   npx wrangler secret put ANTHROPIC_API_KEY
+name = "aplomb-battery"
+main = "src/index.mjs"
+compatibility_date = "2026-07-01"
+account_id = "f2a1cb443cfb87b526fac0886f1b34c8"
+
+routes = [
+  { pattern = "aicon.solutions/api/aplomb/*", zone_name = "aicon.solutions" },
+]
+
+[[kv_namespaces]]
+binding = "APLOMB"
+id = "PLACEHOLDER_RUN_KV_CREATE"
