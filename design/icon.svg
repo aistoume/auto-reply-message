@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3F3F46"/>
+      <stop offset="100%" stop-color="#18181B"/>
+    </linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 底：深色圆角方 -->
+  <rect x="6" y="6" width="116" height="116" rx="28" ry="28" fill="url(#bg)"/>
+
+  <!-- 对方发来的消息：左上，灰、小、朝左的尾巴 -->
+  <path d="M28 30 h34 a9 9 0 0 1 9 9 v16 a9 9 0 0 1 -9 9 h-22 l-12 9 v-9 a9 9 0 0 1 -9 -9 v-16 a9 9 0 0 1 9 -9 z"
+        fill="#71717A"/>
+
+  <!-- 替你回的消息：右下，琥珀、大、朝右的尾巴 -->
+  <path d="M100 56 h-44 a10 10 0 0 0 -10 10 v20 a10 10 0 0 0 10 10 h28 l14 11 v-11 a10 10 0 0 0 10 -10 v-20 a10 10 0 0 0 -10 -10 z"
+        fill="url(#amber)"/>
+
+  <!-- AI 星芒：在回复气泡里 -->
+  <path d="M73 62 L77 74 L89 78 L77 82 L73 94 L69 82 L57 78 L69 74 Z" fill="#18181B"/>
+</svg>
