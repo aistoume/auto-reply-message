@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3F3F46"/>
+      <stop offset="100%" stop-color="#18181B"/>
+    </linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 满幅底：iOS 自己切圆角，图标本身不能带圆角和透明 -->
+  <rect x="0" y="0" width="128" height="128" fill="url(#bg)"/>
+
+  <!-- 对方发来的：左上，灰、小 -->
+  <path d="M28 32 h34 a9 9 0 0 1 9 9 v15 a9 9 0 0 1 -9 9 h-21 l-12 9 v-9 a9 9 0 0 1 -9 -9 v-15 a9 9 0 0 1 9 -9 z"
+        fill="#71717A"/>
+
+  <!-- 替你回的：右下，琥珀、大 -->
+  <path d="M99 57 h-43 a10 10 0 0 0 -10 10 v20 a10 10 0 0 0 10 10 h27 l14 11 v-11 a10 10 0 0 0 10 -10 v-20 a10 10 0 0 0 -10 -10 z"
+        fill="url(#amber)"/>
+
+  <!-- AI 星芒 -->
+  <path d="M72 63 L76 75 L88 79 L76 83 L72 95 L68 83 L56 79 L68 75 Z" fill="#18181B"/>
+</svg>
