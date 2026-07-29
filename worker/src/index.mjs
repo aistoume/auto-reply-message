@@ -148,7 +148,9 @@ async function draft(request, env) {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-api-key': env.ANTHROPIC_API_KEY,
+      // trim：密钥若是用管道喂进 wrangler（echo 会补换行）会带尾随空白，
+      // Anthropic 直接判 invalid x-api-key，排查起来毫无线索。
+      'x-api-key': String(env.ANTHROPIC_API_KEY ?? '').trim(),
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
