@@ -5,12 +5,15 @@ import PhotosUI
 @main
 struct AplombApp: App {
     @StateObject private var battery = BatteryClient()
+    @StateObject private var pending = PendingDraft.shared
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(battery)
+                .environmentObject(pending)
                 .task { await battery.refresh() }
+                .onOpenURL { QuickInvoke.handle($0) }
         }
     }
 }
@@ -125,6 +128,7 @@ final class DraftModel: ObservableObject {
 
 struct DraftView: View {
     @EnvironmentObject private var battery: BatteryClient
+    @EnvironmentObject private var pending: PendingDraft
     @StateObject private var model = DraftModel()
     @State private var tones = ToneConfig.load()
     @State private var picking: PhotosPickerItem?
@@ -208,6 +212,27 @@ struct DraftView: View {
                 }
             }
             .onAppear { tones = ToneConfig.load() }
+            // 悬浮球 / 轻点背面 / 快捷指令进来的请求：直接跑到出稿，
+            // 省掉「打开 app → 找截图 → 选语气」三步
+            .onChange(of: pending.nonce) { _, n in
+                guard n > 0 else { return }
+                tones = ToneConfig.load()
+                guard let tone = pending.resolve(from: tones) else { return }
+                if let handed = pending.image {
+                    model.shot = handed
+                    model.draft = nil
+                } else {
+                    model.loadLatestScreenshot()
+                }
+                Task {
+                    // 相册取图是异步的，等它落地再拟
+                    for _ in 0..<20 where model.shot == nil {
+                        try? await Task.sleep(for: .milliseconds(100))
+                    }
+                    guard model.shot != nil else { return }
+                    await model.run(tone: tone, battery: battery)
+                }
+            }
         }
     }
 }
