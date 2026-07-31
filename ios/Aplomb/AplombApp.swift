@@ -46,8 +46,14 @@ final class DraftModel: ObservableObject {
     @Published var busy = false
     @Published var outOfBattery = false
 
-    /// 取相册里最新的一张截图（不是最新照片 —— 用户刚拍的猫不该被当成聊天）。
-    func loadLatestScreenshot() {
+    /**
+     取相册里最新的一张截图（不是最新照片 —— 用户刚拍的猫不该被当成聊天）。
+
+     [maxAge] 是防呆用的：从悬浮球/快捷指令进来时，如果截图没被真正递过来，
+     退回相册取到的可能是几天前那张 —— 替错对话拟一稿是这个产品最糟的失败
+     方式，所以宁可报错也不猜。手动点「载入最新截图」时不设时限。
+     */
+    func loadLatestScreenshot(maxAge: TimeInterval? = nil) {
         let opts = PHFetchOptions()
         opts.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         opts.fetchLimit = 1
@@ -56,6 +62,13 @@ final class DraftModel: ObservableObject {
         )
         guard let asset = PHAsset.fetchAssets(with: .image, options: opts).firstObject else {
             status = "相册里还没有截图 —— 先在聊天界面截一张"
+            return
+        }
+        if let maxAge,
+           let taken = asset.creationDate,
+           Date().timeIntervalSince(taken) > maxAge {
+            status = "没拿到当前这屏的截图（相册里最新那张是旧的，不敢拿来拟稿）。"
+                + "请检查快捷指令里「拟一稿」的「聊天截图」有没有接上「拍摄屏幕快照」。"
             return
         }
         let req = PHImageRequestOptions()
@@ -218,15 +231,18 @@ struct DraftView: View {
                 guard n > 0 else { return }
                 tones = ToneConfig.load()
                 guard let tone = pending.resolve(from: tones) else { return }
-                if let handed = pending.image {
+                let handed = pending.image
+                if let handed {
                     model.shot = handed
                     model.draft = nil
+                    model.status = nil
                 } else {
-                    model.loadLatestScreenshot()
+                    // 快捷指令没递图 —— 只认 90 秒内的截图，旧的宁可不拟
+                    model.shot = nil
+                    model.loadLatestScreenshot(maxAge: 90)
                 }
                 Task {
-                    // 相册取图是异步的，等它落地再拟
-                    for _ in 0..<20 where model.shot == nil {
+                    for _ in 0..<20 where model.shot == nil && model.status == nil {
                         try? await Task.sleep(for: .milliseconds(100))
                     }
                     guard model.shot != nil else { return }
