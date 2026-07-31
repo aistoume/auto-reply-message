@@ -13,3 +13,6 @@ keystore.properties
 
 # 导出的上传包 —— 每次归档都会重生成,不进版本库
 ios/build/
+
+# 打包产物 —— 每次构建都重生成
+dist/
