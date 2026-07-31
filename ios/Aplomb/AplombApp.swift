@@ -90,7 +90,7 @@ final class DraftModel: ObservableObject {
         }
     }
 
-    func run(tone: Tone, battery: BatteryClient) async {
+    func run(tone: Tone, relation: Tone?, battery: BatteryClient) async {
         guard let shot, let jpeg = shot.jpegData(compressionQuality: 0.7) else {
             status = "先选一张聊天截图"
             return
@@ -104,7 +104,8 @@ final class DraftModel: ObservableObject {
         defer { busy = false }
 
         let prompt = ReplyEngine.prompt(
-            tone: tone, myLanguage: Prefs.myLanguage, persona: Prefs.persona
+            tone: tone, relation: relation,
+            myLanguage: Prefs.myLanguage, persona: Prefs.persona
         )
         let b64 = jpeg.base64EncodedString()
         do {
@@ -146,6 +147,8 @@ struct DraftView: View {
     @State private var tones = ToneConfig.load()
     @State private var picking: PhotosPickerItem?
     @State private var zoomed = false
+    @State private var relations = RelationConfig.load()
+    @State private var relationId = Prefs.relationId
 
     var body: some View {
         NavigationStack {
@@ -205,10 +208,17 @@ struct DraftView: View {
                         .buttonStyle(.bordered)
                     }
 
-                    // ── 情绪选择：横排一行,不再占半屏 ──
+                    // ── 先定关系，再挑语气 ──
                     if model.shot != nil {
+                        RelationRowView(relations: relations, selectedId: $relationId)
                         ToneRowView(tones: tones, active: model.activeTone) { tone in
-                            Task { await model.run(tone: tone, battery: battery) }
+                            Task {
+                                await model.run(
+                                    tone: tone,
+                                    relation: relations.first { $0.id == relationId },
+                                    battery: battery
+                                )
+                            }
                         }
                     }
 
@@ -222,7 +232,13 @@ struct DraftView: View {
 
                     if let draft = model.draft {
                         ReplyCardView(draft: draft, tone: model.activeTone, tones: tones) { tone in
-                            Task { await model.run(tone: tone, battery: battery) }
+                            Task {
+                                await model.run(
+                                    tone: tone,
+                                    relation: relations.first { $0.id == relationId },
+                                    battery: battery
+                                )
+                            }
                         }
                         .id("reply")
                     }
@@ -247,7 +263,11 @@ struct DraftView: View {
                     }
                 }
             }
-            .onAppear { tones = ToneConfig.load() }
+            .onAppear {
+                tones = ToneConfig.load()
+                relations = RelationConfig.load()
+                relationId = Prefs.relationId
+            }
             .fullScreenCover(isPresented: $zoomed) {
                 if let shot = model.shot { ScreenshotViewer(image: shot) }
             }
@@ -275,7 +295,11 @@ struct DraftView: View {
                         try? await Task.sleep(for: .milliseconds(100))
                     }
                     guard model.shot != nil else { return }
-                    await model.run(tone: tone, battery: battery)
+                    await model.run(
+                        tone: tone,
+                        relation: relations.first { $0.id == relationId },
+                        battery: battery
+                    )
                 }
             }
         }

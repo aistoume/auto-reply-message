@@ -24,7 +24,13 @@ enum ReplyEngine {
         let note: String
     }
 
-    static func prompt(tone: Tone, myLanguage: String, persona: String, extra: String = "") -> String {
+    static func prompt(
+        tone: Tone, relation: Tone?, myLanguage: String, persona: String, extra: String = ""
+    ) -> String {
+        // 关系决定「这句话说出去要承担什么」，所以放在档位之前交代
+        let relationLine = (relation?.guidance ?? "").isEmpty
+            ? ""
+            : "\n\n【对方是谁】\(relation!.name)\n【这层关系怎么说话】\(relation!.guidance)"
         let personaLine = persona.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             ? ""
             : "\n机主补充的自我设定（影响语气与身份，但不改变上面的分档要求）：\(persona)"
@@ -40,7 +46,7 @@ enum ReplyEngine {
         然后按下面的档位替机主写回复。
 
         【本次档位】\(tone.name)
-        【档位要求】\(tone.guidance)\(personaLine)\(extraLine)
+        【档位要求】\(tone.guidance)\(relationLine)\(personaLine)\(extraLine)
 
         【第一步：先认语言 —— 别跳过】
         看清楚这段对话在用什么语言。可能是中文、英文、日文…也可能是**混着用**（中英夹杂在很多人的聊天里是常态）。

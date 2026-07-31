@@ -6,8 +6,11 @@ struct SettingsView: View {
     @State private var persona = Prefs.persona
     @State private var apiKey = Prefs.apiKey
     @State private var tones = ToneConfig.load()
+    @State private var relations = RelationConfig.load()
     @State private var editing: Tone?
     @State private var adding = false
+    @State private var editingRelation: Tone?
+    @State private var addingRelation = false
 
     var body: some View {
         NavigationStack {
@@ -33,6 +36,35 @@ struct SettingsView: View {
                         .lineLimit(2...4)
                         .onChange(of: persona) { _, v in Prefs.persona = v }
                     Text("你的身份、说话习惯、底线。会影响所有档位的语气。")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section("常用关系") {
+                    ForEach(relations) { r in
+                        Button { editingRelation = r } label: {
+                            HStack(alignment: .top, spacing: 12) {
+                                Text(r.emoji).font(.title3)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(r.name).foregroundStyle(.primary)
+                                    Text(r.guidance.isEmpty ? "不加任何关系设定" : r.guidance)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(2)
+                                }
+                            }
+                        }
+                    }
+                    if relations.count < RelationConfig.maxRelations {
+                        Button { addingRelation = true } label: {
+                            Label("添加关系", systemImage: "plus.circle")
+                        }
+                    }
+                    Button(role: .destructive) {
+                        RelationConfig.reset()
+                        relations = RelationConfig.load()
+                    } label: { Text("恢复默认关系") }
+                    Text("拟稿前先选对方是谁。同一句「掀桌」，对老板和对恋人不是一回事。")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -89,6 +121,25 @@ struct SettingsView: View {
                         if tones.isEmpty { tones = ToneConfig.defaults }
                     }
                     ToneConfig.save(tones)
+                }
+            }
+            .sheet(item: $editingRelation) { r in
+                ToneEditor(tone: r) { updated in
+                    if let updated {
+                        relations = relations.map { $0.id == updated.id ? updated : $0 }
+                    } else {
+                        relations = relations.filter { $0.id != r.id }
+                        if relations.isEmpty { relations = RelationConfig.defaults }
+                    }
+                    RelationConfig.save(relations)
+                }
+            }
+            .sheet(isPresented: $addingRelation) {
+                ToneEditor(tone: nil) { created in
+                    if let created {
+                        relations.append(created)
+                        RelationConfig.save(relations)
+                    }
                 }
             }
             .sheet(isPresented: $adding) {

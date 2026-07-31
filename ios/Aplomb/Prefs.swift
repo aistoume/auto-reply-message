@@ -26,6 +26,12 @@ enum Prefs {
         set { d.set(newValue.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "apiKey") }
     }
 
+    /// 上次选的关系；默认「没有特殊关系」。
+    static var relationId: String {
+        get { d.string(forKey: "relationId") ?? "none" }
+        set { d.set(newValue, forKey: "relationId") }
+    }
+
     static var lastToneId: String {
         get { d.string(forKey: "lastTone") ?? "" }
         set { d.set(newValue, forKey: "lastTone") }

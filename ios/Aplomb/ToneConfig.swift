@@ -70,3 +70,59 @@ extension Color {
         )
     }
 }
+
+
+/**
+ 对方是谁 —— 在挑语气之前先定的那一层。
+
+ 同一句「掀桌」，对老板和对恋人根本是两回事：一个要顾权力差，一个要顾
+ 情绪分量。关系不定，语气就是空转。
+
+ 结构上直接复用 [Tone]（本质都是「带标签的 prompt 片段」），只是存在
+ 另一个 key 下，编辑器也共用一套。
+ */
+enum RelationConfig {
+    private static let key = "relations.v1"
+
+    /// 第一项是「没有特殊关系」—— guidance 为空表示不往 prompt 里加任何东西。
+    static let defaults: [Tone] = [
+        Tone(id: "none", emoji: "👤", name: "默认", colorHex: "#64748B", guidance: ""),
+        Tone(
+            id: "family", emoji: "🏠", name: "家人", colorHex: "#EF4444",
+            guidance: "血缘关系断不掉，话说重了要长期承受。可以直接、可以划界限，但别翻旧账、别下人格定论；把这一件事说清楚就够，保住关系比赢这一局重要。"
+        ),
+        Tone(
+            id: "friend", emoji: "🫂", name: "朋友", colorHex: "#10B981",
+            guidance: "平等关系，没有上下级。可以坦率，允许一点玩笑和自嘲；但别拿「关系好」当借口替对方做决定或替自己越界。"
+        ),
+        Tone(
+            id: "partner", emoji: "❤️", name: "恋人", colorHex: "#EC4899",
+            guidance: "情绪的分量大于道理。先接住对方的感受，再讲事情本身；不翻旧账、不做人身评判、不用冷暴力和最后通牒。"
+        ),
+        Tone(
+            id: "client", emoji: "💼", name: "客户", colorHex: "#3B82F6",
+            guidance: "有明确的商业边界。守住范围、节点、价钱三件事；客气但不白让，该书面确认的说清楚，别让口头承诺变成默认义务。"
+        ),
+        Tone(
+            id: "boss", emoji: "🎩", name: "老板", colorHex: "#A855F7",
+            guidance: "存在权力差，硬顶没好处。不顶撞，但也别默认接受没说清的要求；把成本、排期、优先级摆到台面上，让对方在几个选项里选，而不是你单方面吞下。"
+        ),
+    ]
+
+    static let maxRelations = 8
+
+    static func load() -> [Tone] {
+        guard let data = UserDefaults.standard.data(forKey: key),
+              let list = try? JSONDecoder().decode([Tone].self, from: data),
+              !list.isEmpty
+        else { return defaults }
+        return list
+    }
+
+    static func save(_ list: [Tone]) {
+        guard let data = try? JSONEncoder().encode(list) else { return }
+        UserDefaults.standard.set(data, forKey: key)
+    }
+
+    static func reset() { UserDefaults.standard.removeObject(forKey: key) }
+}
