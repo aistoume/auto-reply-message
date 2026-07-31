@@ -56,22 +56,28 @@ struct ToneOptions: DynamicOptionsProvider {
     }
 }
 
+/*
+ 下面这些字面量是**本地化的键**，不是最终文案 —— App Intents 的
+ LocalizedStringResource 会拿它去 Localizable.strings 里查。所以键写英文
+ （商店主语言），中文在 zh-Hans 里给译文。写成中文键的话，英文用户在
+ 快捷指令里会看到一串中文。
+ */
 struct DraftIntent: AppIntent {
-    static var title: LocalizedStringResource = "拟一稿"
+    static var title: LocalizedStringResource = "Draft a reply"
     static var description = IntentDescription(
-        "读一张聊天截图，按选定语气替你写好回复。不传截图就用相册里最新那张。"
+        "Reads a chat screenshot and writes your reply in the tone you pick. Without a screenshot it uses the newest one in Photos."
     )
     /// 出稿要给用户看，所以必须把 app 带到前台。
     static var openAppWhenRun = true
 
-    @Parameter(title: "语气", optionsProvider: ToneOptions())
+    @Parameter(title: "Tone", optionsProvider: ToneOptions())
     var tone: String?
 
-    @Parameter(title: "聊天截图")
+    @Parameter(title: "Chat screenshot")
     var screenshot: IntentFile?
 
     static var parameterSummary: some ParameterSummary {
-        Summary("按 \(\.$tone) 拟一稿，截图用 \(\.$screenshot)")
+        Summary("Draft in \(\.$tone) from \(\.$screenshot)")
     }
 
     @MainActor
@@ -89,8 +95,11 @@ struct AplombShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: DraftIntent(),
-            phrases: ["用 \(.applicationName) 拟一稿", "\(.applicationName) 帮我回"],
-            shortTitle: "拟一稿",
+            phrases: [
+                "Draft a reply with \(.applicationName)",
+                "Ask \(.applicationName) what to say",
+            ],
+            shortTitle: "Draft a reply",
             systemImageName: "text.bubble"
         )
     }

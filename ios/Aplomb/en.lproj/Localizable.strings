@@ -134,3 +134,26 @@
 
 "lang.system" = "System";
 "settings.app_language.help2" = "Takes effect immediately — no restart needed.";
+
+/* ── Quick setup ── */
+"setup.entry" = "Set up one-tap access";
+"setup.title" = "One-tap access";
+"setup.lead" = "iOS doesn't let an app draw its own floating button, so you borrow the system's. Set this up once and you can go from a chat to a finished draft without leaving the conversation.";
+"setup.get_shortcut" = "Add the shortcut";
+"setup.part1" = "Build the shortcut (once)";
+"setup.part2" = "Put it on the floating button";
+"setup.a1.title" = "Tap Add Shortcut";
+"setup.a1.body" = "It lands in your Shortcuts app, already wired up. Nothing to configure.";
+"setup.b1.title" = "Open Shortcuts and tap +";
+"setup.b1.body" = "The Shortcuts app comes with iPhone. Tap the + in the top right to start a new one.";
+"setup.b2.title" = "Add “Take Screenshot”";
+"setup.b2.body" = "Search for it and add it first. This is what captures the conversation you're looking at.";
+"setup.b3.title" = "Add “Draft a reply”";
+"setup.b3.body" = "Search Aplomb and add it below. Set Chat screenshot to the Screenshot from step 2 — tap the field and pick it. Name the shortcut Aplomb and save.";
+"setup.c1.title" = "Settings › Accessibility › Touch › AssistiveTouch";
+"setup.c1.body" = "Turn AssistiveTouch on. A small grey button appears and floats over every app.";
+"setup.c2.title" = "Custom Actions › Double-Tap";
+"setup.c2.body" = "Scroll to the bottom of the list and pick your Aplomb shortcut.";
+"setup.after.title" = "From then on";
+"setup.after.body" = "In any chat, double-tap the floating button. The screen is captured and Aplomb opens with it loaded — pick a tone and read the draft.";
+"setup.warn" = "The screenshot step matters. If you skip it, Aplomb falls back to the newest image in Photos, which is usually the wrong conversation.";

@@ -134,3 +134,26 @@
 
 "lang.system" = "跟随系统";
 "settings.app_language.help2" = "改完立刻生效，不用重启。";
+
+/* ── Quick setup ── */
+"setup.entry" = "设置一键唤起";
+"setup.title" = "一键唤起";
+"setup.lead" = "iOS 不让 app 自己画悬浮球，只能借系统那个。配一次，以后在聊天界面上就能直接出稿，不用退出对话。";
+"setup.get_shortcut" = "添加快捷指令";
+"setup.part1" = "先做一条快捷指令（只做一次）";
+"setup.part2" = "挂到悬浮球上";
+"setup.a1.title" = "点「添加快捷指令」";
+"setup.a1.body" = "会直接进你的快捷指令 app，已经配好，不用改任何东西。";
+"setup.b1.title" = "打开「快捷指令」，点右上角 +";
+"setup.b1.body" = "这个 app 是 iPhone 自带的。点右上角的 + 新建一条。";
+"setup.b2.title" = "加一个「截屏」";
+"setup.b2.body" = "搜「截屏」，放在第一个。这一步负责抓你正在看的这屏对话。";
+"setup.b3.title" = "再加「Draft a reply」";
+"setup.b3.body" = "搜 Aplomb，加在下面。把「聊天截图」这一栏点开，选第 2 步的「截屏」结果。给这条指令起名 Aplomb，保存。";
+"setup.c1.title" = "设置 › 辅助功能 › 触控 › 辅助触控";
+"setup.c1.body" = "打开辅助触控。屏幕上会出现一个灰色小圆点，浮在所有 app 上面。";
+"setup.c2.title" = "自定操作 › 轻点两下";
+"setup.c2.body" = "拉到列表最底下，选你刚才那条 Aplomb 指令。";
+"setup.after.title" = "以后就是";
+"setup.after.body" = "在任何聊天界面上，双击那个悬浮球。屏幕被抓下来，Aplomb 带着这张图打开——选个语气，读草稿。";
+"setup.warn" = "第 2 步的截屏不能省。省了的话 Aplomb 会退回去拿相册里最新那张图，通常是另一段对话，出来的稿完全对不上。";

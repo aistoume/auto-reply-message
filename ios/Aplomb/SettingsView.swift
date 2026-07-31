@@ -14,11 +14,21 @@ struct SettingsView: View {
     @State private var persona = Prefs.persona
     @State private var apiKey = Prefs.apiKey
     @State private var paywall = false
+    @State private var setup = false
     @ObservedObject private var lang = AppLanguage.shared
 
     var body: some View {
         NavigationStack {
             Form {
+                // 放最上面而不是塞进「系统」里：没配这个的人只能走「打开 app
+                // → 翻相册 → 选语气」三步,慢到不会在真要回消息的时候用。
+                // 它决定这个 app 会不会被真正用起来,不是一个可选项。
+                Section {
+                    Button { setup = true } label: {
+                        Label(L("setup.entry"), systemImage: "hand.tap.fill")
+                    }
+                }
+
                 // ── 关于我：直接影响出稿 ──
                 Section {
                     VStack(alignment: .leading, spacing: 4) {
@@ -84,6 +94,7 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle(L("settings.title"))
+            .sheet(isPresented: $setup) { QuickSetupView() }
             .task { await battery.refresh() }
         }
     }
