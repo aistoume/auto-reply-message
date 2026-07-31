@@ -40,13 +40,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		DD0000000000000000000002 /* Exceptions for "Aplomb" folder in "Aplomb" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Aplomb.storekit,
-			);
-			target = AA0000000000000000000005 /* Aplomb */;
-		};
 		DD0000000000000000000001 /* Exceptions for "AplombKeyboard" folder in "AplombKeyboard" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -59,9 +52,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AA000000000000000000000F /* Aplomb */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				DD0000000000000000000002 /* Exceptions for "Aplomb" folder in "Aplomb" target */,
-			);
 			path = Aplomb;
 			sourceTree = "<group>";
 		};
@@ -324,6 +314,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				/* 测试用的商品配置只在 Debug 里需要（Scheme 的 StoreKit 下拉
+				   只列 target 成员），正式包不该带着它发出去 */
+				EXCLUDED_SOURCE_FILE_NAMES = "Aplomb.storekit";
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CODE_SIGN_ENTITLEMENTS = Aplomb.entitlements;
 				CODE_SIGN_STYLE = Automatic;
