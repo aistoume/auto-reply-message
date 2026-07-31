@@ -148,24 +148,31 @@ struct DraftView: View {
 
     var body: some View {
         NavigationStack {
+            ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 14) {
                     BatteryBar()
 
                     // ── 截图 ──
                     Group {
                         if let shot = model.shot {
+                            // 缩略图而已 —— 只要能认出「是这段对话」就够，
+                            // 省下的高度留给真正要读的回复
                             Image(uiImage: shot)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(maxHeight: 260)
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .frame(maxWidth: .infinity, maxHeight: 130)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12).strokeBorder(.quaternary)
+                                )
                         } else {
-                            RoundedRectangle(cornerRadius: 14)
+                            RoundedRectangle(cornerRadius: 12)
                                 .fill(.quaternary)
-                                .frame(height: 160)
+                                .frame(height: 96)
                                 .overlay(
                                     Text("在聊天里截一张图，回到这里")
+                                        .font(.footnote)
                                         .foregroundStyle(.secondary)
                                 )
                         }
@@ -186,14 +193,11 @@ struct DraftView: View {
                         .buttonStyle(.bordered)
                     }
 
-                    // ── 情绪轮盘 ──
+                    // ── 情绪选择：横排一行,不再占半屏 ──
                     if model.shot != nil {
-                        Text("挑一个语气")
-                            .font(.headline)
-                        ToneWheelView(tones: tones, active: model.activeTone) { tone in
+                        ToneRowView(tones: tones, active: model.activeTone) { tone in
                             Task { await model.run(tone: tone, battery: battery) }
                         }
-                        .frame(height: 260)
                     }
 
                     if model.busy { ProgressView().frame(maxWidth: .infinity) }
@@ -208,9 +212,16 @@ struct DraftView: View {
                         ReplyCardView(draft: draft, tone: model.activeTone, tones: tones) { tone in
                             Task { await model.run(tone: tone, battery: battery) }
                         }
+                        .id("reply")
                     }
                 }
                 .padding()
+            }
+            // 出稿即滚到回复 —— 拟完还要自己往下拖是最没道理的一步
+            .onChange(of: model.draft) { _, d in
+                guard d != nil else { return }
+                withAnimation { proxy.scrollTo("reply", anchor: .top) }
+            }
             }
             .navigationTitle("Aplomb")
             .onChange(of: picking) { _, item in
