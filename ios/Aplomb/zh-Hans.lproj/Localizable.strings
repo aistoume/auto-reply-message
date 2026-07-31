@@ -43,6 +43,8 @@
 "paywall.bars_month" = "每月 %d 格电";
 "paywall.terms" = "订阅按月自动续期，可随时在系统「订阅」里取消。";
 "paywall.byok" = "不想订阅也行：在设置里填自己的 Anthropic API key，走你自己的账户，功能完全一样。";
+"paywall.eula" = "服务条款";
+"paywall.privacy" = "隐私政策";
 "tier.lite" = "轻度";
 "tier.plus" = "常用";
 "tier.pro" = "重度";

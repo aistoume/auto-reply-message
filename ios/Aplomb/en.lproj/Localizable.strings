@@ -43,6 +43,8 @@
 "paywall.bars_month" = "%d bars per month";
 "paywall.terms" = "Auto-renews monthly. Cancel anytime in your system Subscriptions.";
 "paywall.byok" = "Rather not subscribe? Add your own Anthropic API key in Settings — same features, your account.";
+"paywall.eula" = "Terms of Use";
+"paywall.privacy" = "Privacy Policy";
 "tier.lite" = "Light";
 "tier.plus" = "Regular";
 "tier.pro" = "Heavy";

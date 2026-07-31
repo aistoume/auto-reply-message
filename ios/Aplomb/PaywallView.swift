@@ -8,6 +8,10 @@ import SwiftUI
  而愿意自己配 key 的用户本来也不会买订阅，留住他们比多骗一单更划算。
  */
 struct PaywallView: View {
+    /// Apple 的标准 EULA —— 我们没有自定义许可协议，用官方那份即可（审核认这个）
+    static let eulaURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
+    static let privacyURL = URL(string: "https://aicon.solutions/aplomb/privacy")!
+
     @EnvironmentObject private var battery: BatteryClient
     @StateObject private var store = Subscriptions()
     @Environment(\.dismiss) private var dismiss
@@ -52,6 +56,14 @@ struct PaywallView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(L("paywall.terms"))
                         Text(L("paywall.byok"))
+                        // App Review 3.1.2 要求订阅页上必须有能点开的条款和隐私政策；
+                        // 光写一句「详见条款」是最常见的驳回理由之一。
+                        HStack(spacing: 14) {
+                            Link(L("paywall.eula"), destination: PaywallView.eulaURL)
+                            Link(L("paywall.privacy"), destination: PaywallView.privacyURL)
+                        }
+                        .font(.caption.weight(.medium))
+                        .padding(.top, 2)
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)

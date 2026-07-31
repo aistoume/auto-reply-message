@@ -71,7 +71,8 @@ object ReplyEngine {
 【语言规则】
 - reply（正文）：用你上面认出来的语言写，包括混用的比例。像母语者在手机上打的字，不要翻译腔。
 - replyGloss（回译）：把 reply 完整翻成 $myLang，让机主知道自己正要发出去的是什么。如果 reply 本身就是 $myLang，这里留空字符串。
-- theirLanguage：如实写出你认出的语言（混用就写「中英夹杂」这样）。
+- theirLanguage：如实写出你认出的语言（混用就写「中英夹杂」这样）。这个标签是**给机主看的**，
+  所以用 $myLang 写 —— 机主读英文就写 "English"、"Mixed Chinese & English"，不要写「英文」。
 - subtext / risk / note：一律用 $myLang 写给机主看。
 
 【分寸底线 —— 任何档位都适用】
@@ -82,7 +83,7 @@ object ReplyEngine {
 
 只输出下面这个 JSON，不要代码块、不要多余的话：
 {
-  "theirLanguage": "对方使用的语言",
+  "theirLanguage": "对方使用的语言，用 $myLang 写",
   "subtext": "潜台词翻译：对方这句话真正想干什么（施压/试探/甩锅/卖惨/铺垫要求…），一到两句说透",
   "risk": "误读风险：截图信息不足或有歧义的地方；判断很确定就写「无」",
   "reply": "可以直接发出去的正文，只要正文本身，不要引号不要解释",
