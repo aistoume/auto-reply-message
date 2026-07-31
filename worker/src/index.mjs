@@ -26,7 +26,9 @@ const BATTERY_BARS = 20;
 /** 每个设备的美元硬上限 —— 格数用完前先撞到它就停。 */
 const HARD_CAP_USD = 0.35;
 
-const MAX_TOKENS = 700;
+// 输出要装下 五个字段 + 正文 + 回译,中文还更吃 token —— 700 会在
+// 中英混排的稿子上被截断甚至一个字都吐不出来。
+const MAX_TOKENS = 1600;
 /** 截图 base64 上限 ≈ 1.5MB 原图，超了就是有人在灌 payload。 */
 const MAX_IMAGE_CHARS = 2_000_000;
 
@@ -181,6 +183,20 @@ async function draft(request, env) {
     .filter((b) => b.type === 'text')
     .map((b) => b.text)
     .join('');
+
+  // 空回复不扣电 —— 让用户为一份没拿到的稿子付一格,是最不该有的收费。
+  // 多半是撞了 max_tokens,把 stop_reason 带出来方便定位。
+  if (!text.trim()) {
+    return json(
+      {
+        error: 'empty_draft',
+        message: '模型这次没出稿（可能内容太长）。没有扣电，再试一次。',
+        stopReason: out.stop_reason ?? null,
+        battery: batteryOf(acct),
+      },
+      502,
+    );
+  }
 
   // 扣费：一次成功拟稿一格电，同时记真实美元。失败路径不会走到这里。
   const spend = costUsd(out.usage?.input_tokens ?? 0, out.usage?.output_tokens ?? 0);

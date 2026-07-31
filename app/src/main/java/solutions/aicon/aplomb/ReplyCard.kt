@@ -128,6 +128,15 @@ object ReplyCard {
             }
             card.addView(replyBox)
 
+            // 回译：正文若不是机主的语言，发出去前得知道自己在说什么
+            if (draft.replyGloss.isNotBlank()) {
+                card.addView(TextView(c).apply {
+                    text = draft.replyGloss
+                    setTextColor(Color.rgb(165, 165, 175)); textSize = 12f
+                    setPadding(0, dp(8), 0, 0)
+                })
+            }
+
             if (draft.note.isNotBlank()) {
                 card.addView(TextView(c).apply {
                     text = c.getString(R.string.card_note, draft.note)

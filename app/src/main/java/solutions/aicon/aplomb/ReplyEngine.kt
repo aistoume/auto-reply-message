@@ -28,6 +28,9 @@ object ReplyEngine {
         val risk: String,
         /** 可直接发送的正文 —— 对方语言。 */
         val reply: String,
+        /** 正文的回译 —— 机主语言；同语言时为空。
+         *  正文可能是机主读不顺的语言，发出去前得知道自己在说什么。 */
+        val replyGloss: String,
         /** 发送建议 / 长期策略 —— 机主语言。 */
         val note: String,
     )
@@ -60,9 +63,16 @@ object ReplyEngine {
 【本次档位】${tone.name}
 【档位要求】${tone.guidance}$personaLine$extraLine
 
-【语言规则 —— 很重要】
-- 回复正文（reply）必须使用**对方正在使用的语言**。对方发英文就回英文，发日文就回日文，中文就回中文。不要翻译腔，要像母语者在手机上打的字。
-- 其余所有字段（subtext / risk / note）一律用**$myLang**写给机主看。
+【第一步：先认语言 —— 别跳过】
+看清楚这段对话在用什么语言。可能是中文、英文、日文…也可能是**混着用**（中英夹杂在很多人的聊天里是常态）。
+判断依据按优先级：① 对方最后一条消息的语言；② 整段对话里对方用得最多的语言。
+如果对方本来就混着用，你**也照着混**——别强行统一成一种，那不像同一个人在说话。
+
+【语言规则】
+- reply（正文）：用你上面认出来的语言写，包括混用的比例。像母语者在手机上打的字，不要翻译腔。
+- replyGloss（回译）：把 reply 完整翻成 $myLang，让机主知道自己正要发出去的是什么。如果 reply 本身就是 $myLang，这里留空字符串。
+- theirLanguage：如实写出你认出的语言（混用就写「中英夹杂」这样）。
+- subtext / risk / note：一律用 $myLang 写给机主看。
 
 【分寸底线 —— 任何档位都适用】
 - 不要脏字、人身攻击、威胁、造谣。
@@ -76,6 +86,7 @@ object ReplyEngine {
   "subtext": "潜台词翻译：对方这句话真正想干什么（施压/试探/甩锅/卖惨/铺垫要求…），一到两句说透",
   "risk": "误读风险：截图信息不足或有歧义的地方；判断很确定就写「无」",
   "reply": "可以直接发出去的正文，只要正文本身，不要引号不要解释",
+  "replyGloss": "reply 的回译（机主语言）；reply 已是机主语言时留空",
   "note": "发送建议：这句发出去会怎样、后续可能怎么走、机主要自己确认什么"
 }
 """.trim()
@@ -93,6 +104,7 @@ object ReplyEngine {
                 subtext = o.optString("subtext").trim(),
                 risk = o.optString("risk").trim(),
                 reply = reply,
+                replyGloss = o.optString("replyGloss").trim(),
                 note = o.optString("note").trim(),
             )
         }.getOrNull()

@@ -66,8 +66,8 @@ final class BatteryClient: ObservableObject {
               var req = request("battery", method: "GET") as URLRequest?
         else { return }
         req.setValue("Bearer \(t)", forHTTPHeaderField: "authorization")
-        guard let (data, resp) = try? await URLSession.shared.data(for: req) else { return }
-        if (resp as? HTTPURLResponse)?.statusCode == 401 {
+        guard let (data, resp) = try? await send(req) else { return }
+        if resp.statusCode == 401 {
             // token 失效（后端重建过）—— 重新领一块
             token = nil
             await claim()
@@ -87,8 +87,8 @@ final class BatteryClient: ObservableObject {
         req.setValue("Bearer \(t)", forHTTPHeaderField: "authorization")
         req.httpBody = try JSONEncoder().encode(Req(imageBase64: imageBase64, prompt: prompt))
 
-        let (data, resp) = try await URLSession.shared.data(for: req)
-        let code = (resp as? HTTPURLResponse)?.statusCode ?? 0
+        let (data, resp) = try await send(req)
+        let code = resp.statusCode
         if code == 402 {
             let err = try? JSONDecoder().decode(Err.self, from: data)
             if let b = err?.battery { battery = b }
@@ -104,6 +104,37 @@ final class BatteryClient: ObservableObject {
 
     // ── plumbing ───────────────────────────────────────────────────────
 
+    /**
+     发一次请求，最多重试两次。
+
+     后端和官网静态站挂在同一个域名上，Cloudflare 偶尔会把请求路由到静态站，
+     返回一个非 JSON 的 404 页面。概率不高但真实存在，撞上一次用户就看到
+     「服务暂时不可用」——重试一下就好了，不该让用户自己再点一遍。
+     */
+    private func send(_ req: URLRequest, attempts: Int = 3) async throws -> (Data, HTTPURLResponse) {
+        var lastError: Error?
+        for attempt in 0..<attempts {
+            do {
+                let (data, resp) = try await URLSession.shared.data(for: req)
+                let http = resp as? HTTPURLResponse
+                let code = http?.statusCode ?? 0
+                // 402/401 是后端自己的答复，别重试；只有「根本没落到 worker
+                // 上」这种情况才值得重来 —— 特征是响应不是 JSON。
+                let looksJSON = data.first == UInt8(ascii: "{")
+                if looksJSON || code == 402 || code == 401 {
+                    return (data, http ?? HTTPURLResponse())
+                }
+                lastError = Failure(message: "服务暂时不可用（\(code)）")
+            } catch {
+                lastError = error
+            }
+            if attempt < attempts - 1 {
+                try? await Task.sleep(for: .milliseconds(400 * (attempt + 1)))
+            }
+        }
+        throw lastError ?? Failure(message: "网络不通")
+    }
+
     private func request(_ path: String, method: String) -> URLRequest {
         var req = URLRequest(url: URL(string: "\(base)/\(path)")!)
         req.httpMethod = method
@@ -116,7 +147,7 @@ final class BatteryClient: ObservableObject {
         var req = request(path, method: "POST")
         if auth, let t = token { req.setValue("Bearer \(t)", forHTTPHeaderField: "authorization") }
         req.httpBody = try JSONEncoder().encode(body)
-        let (data, _) = try await URLSession.shared.data(for: req)
+        let (data, _) = try await send(req)
         return try JSONDecoder().decode(R.self, from: data)
     }
 }

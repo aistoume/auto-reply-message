@@ -50,6 +50,14 @@ struct ReplyCardView: View {
                 .padding(12)
                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 12))
 
+            // 回译:正文若不是机主的语言,发出去前得知道自己在说什么
+            if !draft.replyGloss.isEmpty {
+                Text(draft.replyGloss)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 2)
+            }
+
             if !draft.note.isEmpty {
                 Text("建议：\(draft.note)")
                     .font(.caption)
