@@ -1,0 +1,131 @@
+/* ── Tabs ── */
+"tab.tones" = "语气";
+"tab.draft" = "拟稿";
+"tab.settings" = "设置";
+
+/* ── 拟稿页 ── */
+"draft.empty" = "在聊天里截一张图，回到这里";
+"draft.load_latest" = "载入最新截图";
+"draft.album" = "相册";
+"draft.who" = "对方是谁";
+"draft.thinking" = "正在按「%@」拟稿…";
+"draft.failed" = "这次没出稿，换一档语气或重截一张试试（没有扣电）";
+"draft.no_screenshot" = "相册里还没有截图 —— 先在聊天界面截一张";
+"draft.stale" = "没拿到当前这屏的截图（相册里最新那张是旧的，不敢拿来拟稿）。请检查快捷指令里「拟一稿」的「聊天截图」有没有接上「拍摄屏幕快照」。";
+"draft.pick_first" = "先选一张聊天截图";
+"draft.network" = "网络不通，稍后再试";
+
+/* ── 回复卡 ── */
+"card.subtext" = "潜台词：%@";
+"card.note" = "建议：%@";
+"card.copy" = "复制正文";
+"card.copied" = "已复制，回聊天里粘贴";
+
+/* ── 看图 ── */
+"viewer.hint" = "双指缩放 · 双击放大 · 拖动查看";
+
+/* ── 电池 / 订阅 ── */
+"battery.free" = "免费电池 %d/%d 格";
+"battery.free_empty" = "免费电池已用完";
+"battery.month" = "本月电池 %d/%d 格";
+"battery.month_empty" = "本月电池已用完";
+"battery.claiming" = "正在领取免费电池…";
+"battery.topup" = "续电";
+"battery.topup_now" = "去续电";
+"battery.own_key" = "用的是你自己的 API key";
+"paywall.title" = "续电";
+"paywall.head" = "每月自动续电";
+"paywall.sub" = "一次拟稿用一格电。选一档，每个月自动回满。";
+"paywall.current" = "当前：%@（每月 %d 格）";
+"paywall.loading" = "读取中…";
+"paywall.restore" = "恢复购买";
+"paywall.per_month" = "/ 月";
+"paywall.bars_month" = "每月 %d 格电";
+"paywall.terms" = "订阅按月自动续期，可随时在系统「订阅」里取消。";
+"paywall.byok" = "不想订阅也行：在设置里填自己的 Anthropic API key，走你自己的账户，功能完全一样。";
+"tier.lite" = "轻度";
+"tier.plus" = "常用";
+"tier.pro" = "重度";
+"tier.lite.blurb" = "偶尔遇到难回的消息";
+"tier.plus.blurb" = "每天都要应付几条";
+"tier.pro.blurb" = "工作日高频使用";
+
+/* ── 语气页 ── */
+"tones.title" = "语气";
+"tones.relations" = "常用关系";
+"tones.relations.help" = "拟稿前先选对方是谁。同一句「掀桌」，对老板和对恋人不是一回事。";
+"tones.tones" = "情绪档位";
+"tones.tones.help" = "拟稿时可选的语气。点一条修改，也可以自己加。";
+"tones.add_relation" = "添加关系";
+"tones.add_tone" = "添加档位";
+"tones.reset_relation" = "恢复默认关系";
+"tones.reset_tone" = "恢复默认档位";
+"tones.none_guidance" = "不加任何关系设定";
+"tone.edit" = "修改";
+"tone.add" = "添加";
+"tone.delete" = "删除";
+"tone.name_ph" = "名称，如「体面」";
+"tone.emoji_ph" = "图标 emoji";
+"tone.guidance_ph" = "这一档怎么说话（写给 AI 看）";
+"tone.section_icon" = "图标与名称";
+"tone.section_color" = "颜色";
+"tone.section_guidance" = "怎么说话";
+
+/* ── 设置页 ── */
+"settings.title" = "设置";
+"settings.me" = "关于我";
+"settings.my_language" = "我的语言";
+"settings.my_language.help" = "潜台词和建议永远用这个语言写给你看；回复正文自动跟对方说的语言走。";
+"settings.my_language.ph" = "中文 / English / 日本語…";
+"settings.persona" = "我是谁";
+"settings.persona.help" = "你的身份、说话习惯、底线。会影响所有档位的语气。";
+"settings.persona.ph" = "例：自由职业设计师，说话简短偏冷，不接受无偿改稿";
+"settings.system" = "系统";
+"settings.battery" = "电池";
+"settings.battery.help" = "一次拟稿用一格电。订阅可每月自动续电，也可以填自己的 API key。";
+"settings.key" = "自带 API key（可选）";
+"settings.key.help" = "填了就绕过电池，直连你自己的 Anthropic 账户。留空就用电池。";
+"settings.privacy" = "隐私";
+"settings.privacy.help" = "没有服务器保存你的聊天内容。截图只在你点拟稿的那一刻上传做识别，不留存。";
+"settings.app_language" = "界面语言";
+"settings.app_language.help" = "跟随系统。要单独设置请去 系统设置 › Aplomb › 语言。";
+
+/* ── 内置档位 ── */
+"tone.warm" = "热情";
+"tone.warm.g" = "真心接住对方的好意或消息，把关系往前推一步。可以具体夸到点子上、可以主动多说一句，但不谄媚、不说空话套话。";
+"tone.thanks" = "感谢";
+"tone.thanks.g" = "把谢意说具体：谢对方做的哪一件事、对你意味着什么。别停在「谢谢」两个字，也别夸张到让对方有负担。";
+"tone.yes" = "爽快";
+"tone.yes.g" = "干脆答应，把事往前推。明确说清你会做什么、什么时候给——痛快接下但不含糊承诺没把握的部分。";
+"tone.humor" = "幽默";
+"tone.humor.g" = "用轻松和自嘲化解，把气氛带回来。玩笑对事不对人，不阴阳怪气、不用讽刺当武器；如果这事根本笑不出来，就别硬开玩笑。";
+"tone.comfort" = "安慰";
+"tone.comfort.g" = "对方在难受或诉苦时用。先接住情绪、别急着给建议或讲道理；说人话，不喊口号，不轻飘飘地说「都会好的」。";
+"tone.decent" = "体面";
+"tone.decent.g" = "保留关系、留有余地，对方容易接受。把事情往前推，不追究、不上价值，但也不白白答应对方没说清的要求。";
+"tone.ask" = "追问";
+"tone.ask.g" = "信息不够就先别表态。问到关键的那一两点（要什么、什么时候、多少），把球礼貌地推回去，问完再决定。";
+"tone.needle" = "绵里藏针";
+"tone.needle.g" = "把问题摆到明面上，守住底线，既不硬怼也不妥协。用具体的事实、数字、时间点说话，让对方自己意识到成本，语气始终客气。";
+"tone.table" = "掀桌";
+"tone.table.g" = "把规则讲清楚、不再退让，接受关系可能就此结束。仍然只讲事实和后果，不带脏字、不人身攻击、不威胁。";
+"tone.cool" = "冷处理";
+"tone.cool.g" = "先不表态、不接话茬、把决定权留在自己手里。简短、平静、不解释、不承诺，给自己留出时间。";
+
+/* ── 内置关系 ── */
+"rel.none" = "默认";
+"rel.family" = "家人";
+"rel.family.g" = "血缘关系断不掉，话说重了要长期承受。可以直接、可以划界限，但别翻旧账、别下人格定论；把这一件事说清楚就够，保住关系比赢这一局重要。";
+"rel.friend" = "朋友";
+"rel.friend.g" = "平等关系，没有上下级。可以坦率，允许一点玩笑和自嘲；但别拿「关系好」当借口替对方做决定或替自己越界。";
+"rel.partner" = "恋人";
+"rel.partner.g" = "情绪的分量大于道理。先接住对方的感受，再讲事情本身；不翻旧账、不做人身评判、不用冷暴力和最后通牒。";
+"rel.client" = "客户";
+"rel.client.g" = "有明确的商业边界。守住范围、节点、价钱三件事；客气但不白让，该书面确认的说清楚，别让口头承诺变成默认义务。";
+"rel.boss" = "老板";
+"rel.boss.g" = "存在权力差，硬顶没好处。不顶撞，但也别默认接受没说清的要求；把成本、排期、优先级摆到台面上，让对方在几个选项里选，而不是你单方面吞下。";
+
+/* ── 通用 ── */
+"common.cancel" = "取消";
+"common.save" = "保存";
+"common.close" = "关闭";

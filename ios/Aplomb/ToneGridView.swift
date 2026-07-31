@@ -73,7 +73,7 @@ struct RelationGridView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("对方是谁")
+            Text(L("draft.who"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             LazyVGrid(columns: columns, spacing: 8) {

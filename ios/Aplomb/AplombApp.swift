@@ -18,18 +18,6 @@ struct AplombApp: App {
     }
 }
 
-struct RootView: View {
-    var body: some View {
-        TabView {
-            DraftView()
-                .tabItem { Label("拟稿", systemImage: "text.bubble") }
-            SettingsView()
-                .tabItem { Label("设置", systemImage: "gearshape") }
-        }
-        .tint(.orange)
-    }
-}
-
 // ─────────────────────────────────────────────────────────────────────────
 // 主流程：截图 → 选档 → 出稿
 //
@@ -61,14 +49,13 @@ final class DraftModel: ObservableObject {
             format: "(mediaSubtype & %d) != 0", PHAssetMediaSubtype.photoScreenshot.rawValue
         )
         guard let asset = PHAsset.fetchAssets(with: .image, options: opts).firstObject else {
-            status = "相册里还没有截图 —— 先在聊天界面截一张"
+            status = L("draft.no_screenshot")
             return
         }
         if let maxAge,
            let taken = asset.creationDate,
            Date().timeIntervalSince(taken) > maxAge {
-            status = "没拿到当前这屏的截图（相册里最新那张是旧的，不敢拿来拟稿）。"
-                + "请检查快捷指令里「拟一稿」的「聊天截图」有没有接上「拍摄屏幕快照」。"
+            status = L("draft.stale")
             return
         }
         let req = PHImageRequestOptions()
@@ -92,12 +79,12 @@ final class DraftModel: ObservableObject {
 
     func run(tone: Tone, relation: Tone?, battery: BatteryClient) async {
         guard let shot, let jpeg = shot.jpegData(compressionQuality: 0.7) else {
-            status = "先选一张聊天截图"
+            status = L("draft.pick_first")
             return
         }
         busy = true
         activeTone = tone
-        status = "正在按「\(tone.name)」拟稿…"
+        status = L("draft.thinking", tone.name)
         draft = nil
         outOfBattery = false
         Prefs.lastToneId = tone.id
@@ -125,7 +112,7 @@ final class DraftModel: ObservableObject {
                     toneEmoji: tone.emoji, toneName: tone.name, text: parsed.reply
                 ))
             } else {
-                status = "这次没出稿，换一档语气或重截一张试试（没有扣电）"
+                status = L("draft.failed")
             }
         } catch let e as BatteryClient.Empty {
             outOfBattery = true
@@ -135,7 +122,7 @@ final class DraftModel: ObservableObject {
         } catch let e as AnthropicClient.Failure {
             status = e.message
         } catch {
-            status = "网络不通，稍后再试"
+            status = L("draft.network")
         }
     }
 }
@@ -186,7 +173,7 @@ struct DraftView: View {
                                 .fill(.quaternary)
                                 .frame(height: 96)
                                 .overlay(
-                                    Text("在聊天里截一张图，回到这里")
+                                    Text(L("draft.empty"))
                                         .font(.footnote)
                                         .foregroundStyle(.secondary)
                                 )
@@ -197,13 +184,13 @@ struct DraftView: View {
                         Button {
                             model.loadLatestScreenshot()
                         } label: {
-                            Label("载入最新截图", systemImage: "photo.badge.arrow.down")
+                            Label(L("draft.load_latest"), systemImage: "photo.badge.arrow.down")
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.orange)
 
                         PhotosPicker(selection: $picking, matching: .images) {
-                            Label("相册", systemImage: "photo.on.rectangle")
+                            Label(L("draft.album"), systemImage: "photo.on.rectangle")
                         }
                         .buttonStyle(.bordered)
                     }
@@ -329,7 +316,7 @@ struct BatteryBar: View {
     @ViewBuilder
     private var content: some View {
         if !Prefs.apiKey.isEmpty {
-            Label("用的是你自己的 API key", systemImage: "key.fill")
+            Label(L("battery.own_key"), systemImage: "key.fill")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         } else if let b = battery.battery {
@@ -341,7 +328,7 @@ struct BatteryBar: View {
                         .font(.subheadline.weight(.medium))
                     Spacer()
                     // 没电时把订阅入口顶到最显眼处；有电时留个低调的「续电」
-                    Button(b.isEmpty ? "去续电" : "续电") { paywall = true }
+                    Button(L(b.isEmpty ? "battery.topup_now" : "battery.topup")) { paywall = true }
                         .font(.caption.weight(b.isEmpty ? .semibold : .regular))
                         .buttonStyle(.plain)
                         .foregroundStyle(b.isEmpty ? .orange : .secondary)
@@ -352,13 +339,14 @@ struct BatteryBar: View {
             .padding(12)
             .background(.quaternary, in: RoundedRectangle(cornerRadius: 12))
         } else if battery.claiming {
-            ProgressView("正在领取免费电池…").font(.footnote)
+            ProgressView(L("battery.claiming")).font(.footnote)
         }
     }
 
     private func label(_ b: BatteryClient.Battery) -> String {
-        if b.isEmpty { return b.isSubscribed ? "本月电池已用完" : "免费电池已用完" }
-        let prefix = b.isSubscribed ? "本月电池" : "免费电池"
-        return "\(prefix) \(b.bars)/\(b.barsTotal) 格"
+        if b.isEmpty {
+            return L(b.isSubscribed ? "battery.month_empty" : "battery.free_empty")
+        }
+        return L(b.isSubscribed ? "battery.month" : "battery.free", b.bars, b.barsTotal)
     }
 }

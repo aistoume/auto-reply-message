@@ -1,0 +1,131 @@
+/* ── Tabs ── */
+"tab.tones" = "Tones";
+"tab.draft" = "Draft";
+"tab.settings" = "Settings";
+
+/* ── Draft ── */
+"draft.empty" = "Screenshot the chat, then come back here";
+"draft.load_latest" = "Load latest screenshot";
+"draft.album" = "Photos";
+"draft.who" = "Who are they?";
+"draft.thinking" = "Drafting in “%@”…";
+"draft.failed" = "No draft this time — try another tone or a fresh screenshot (no charge)";
+"draft.no_screenshot" = "No screenshots yet — take one in the chat first";
+"draft.stale" = "Couldn’t get the current screen (the newest screenshot is old, and drafting from it would be wrong). Check that “Chat screenshot” in your shortcut is wired to “Take Screenshot”.";
+"draft.pick_first" = "Pick a chat screenshot first";
+"draft.network" = "Network unavailable — try again";
+
+/* ── Reply card ── */
+"card.subtext" = "Subtext: %@";
+"card.note" = "Note: %@";
+"card.copy" = "Copy reply";
+"card.copied" = "Copied — paste it in the chat";
+
+/* ── Viewer ── */
+"viewer.hint" = "Pinch to zoom · double-tap to enlarge · drag to pan";
+
+/* ── Battery / subscription ── */
+"battery.free" = "Free battery %d/%d";
+"battery.free_empty" = "Free battery is empty";
+"battery.month" = "This month %d/%d";
+"battery.month_empty" = "This month’s battery is empty";
+"battery.claiming" = "Getting your free battery…";
+"battery.topup" = "Top up";
+"battery.topup_now" = "Top up";
+"battery.own_key" = "Using your own API key";
+"paywall.title" = "Top up";
+"paywall.head" = "Recharged every month";
+"paywall.sub" = "One draft costs one bar. Pick a plan and it refills monthly.";
+"paywall.current" = "Current: %@ (%d bars / month)";
+"paywall.loading" = "Loading…";
+"paywall.restore" = "Restore purchases";
+"paywall.per_month" = "/ month";
+"paywall.bars_month" = "%d bars per month";
+"paywall.terms" = "Auto-renews monthly. Cancel anytime in your system Subscriptions.";
+"paywall.byok" = "Rather not subscribe? Add your own Anthropic API key in Settings — same features, your account.";
+"tier.lite" = "Light";
+"tier.plus" = "Regular";
+"tier.pro" = "Heavy";
+"tier.lite.blurb" = "The occasional awkward message";
+"tier.plus.blurb" = "A few every day";
+"tier.pro.blurb" = "All day, every workday";
+
+/* ── Tones tab ── */
+"tones.title" = "Tones";
+"tones.relations" = "Relationships";
+"tones.relations.help" = "Pick who you’re talking to before drafting. “Hard line” to your boss and to your partner are not the same message.";
+"tones.tones" = "Tones";
+"tones.tones.help" = "The tones you can pick when drafting. Tap one to edit, or add your own.";
+"tones.add_relation" = "Add a relationship";
+"tones.add_tone" = "Add a tone";
+"tones.reset_relation" = "Restore default relationships";
+"tones.reset_tone" = "Restore default tones";
+"tones.none_guidance" = "No relationship context added";
+"tone.edit" = "Edit";
+"tone.add" = "Add";
+"tone.delete" = "Delete";
+"tone.name_ph" = "Name, e.g. “Gracious”";
+"tone.emoji_ph" = "Icon emoji";
+"tone.guidance_ph" = "How this tone talks (written for the AI)";
+"tone.section_icon" = "Icon and name";
+"tone.section_color" = "Colour";
+"tone.section_guidance" = "How it talks";
+
+/* ── Settings ── */
+"settings.title" = "Settings";
+"settings.me" = "About me";
+"settings.my_language" = "My language";
+"settings.my_language.help" = "Subtext and advice are always written to you in this language; the reply itself follows whatever language they’re using.";
+"settings.my_language.ph" = "English / 中文 / 日本語…";
+"settings.persona" = "Who I am";
+"settings.persona.help" = "Your role, how you talk, your limits. Shapes every tone.";
+"settings.persona.ph" = "e.g. freelance designer, terse and dry, no unpaid revisions";
+"settings.system" = "System";
+"settings.battery" = "Battery";
+"settings.battery.help" = "One draft costs one bar. Subscribe for a monthly refill, or use your own API key.";
+"settings.key" = "Your own API key (optional)";
+"settings.key.help" = "Set this to bypass the battery and go straight to your own Anthropic account. Leave empty to use the battery.";
+"settings.privacy" = "Privacy";
+"settings.privacy.help" = "No server keeps your chats. The screenshot is uploaded only at the moment you tap a tone, and is not stored.";
+"settings.app_language" = "App language";
+"settings.app_language.help" = "Follows your system. To set it just for Aplomb, go to System Settings › Aplomb › Language.";
+
+/* ── Built-in tones ── */
+"tone.warm" = "Warm";
+"tone.warm.g" = "Genuinely receive what they said and move the relationship forward. Praise something specific, add a line of your own — but no flattery and no filler.";
+"tone.thanks" = "Grateful";
+"tone.thanks.g" = "Make the thanks concrete: what they did and what it meant to you. Don’t stop at “thanks”, and don’t overdo it until it becomes a burden.";
+"tone.yes" = "Yes, on it";
+"tone.yes.g" = "Agree cleanly and move things forward. Say exactly what you’ll do and by when — take it on gladly, but don’t vaguely promise the parts you can’t control.";
+"tone.humor" = "Light";
+"tone.humor.g" = "Defuse with lightness and a bit of self-deprecation. Jokes land on the situation, never the person — no sarcasm as a weapon. If it genuinely isn’t funny, don’t force it.";
+"tone.comfort" = "Comforting";
+"tone.comfort.g" = "For when they’re hurting. Receive the feeling first; don’t rush to advice or logic. Talk like a person — no slogans, no breezy “it’ll be fine”.";
+"tone.decent" = "Gracious";
+"tone.decent.g" = "Keep the relationship, leave room, easy for them to accept. Move things forward without litigating the past — but don’t silently agree to anything they left vague.";
+"tone.ask" = "Clarify";
+"tone.ask.g" = "Don’t commit while the information is thin. Ask the one or two things that decide it (what, by when, how much) and put the ball politely back in their court.";
+"tone.needle" = "Pointed";
+"tone.needle.g" = "Put the problem on the table, hold the line, neither fight nor fold. Speak in concrete facts, numbers and dates so they see the cost themselves. Stay polite throughout.";
+"tone.table" = "Hard line";
+"tone.table.g" = "State the rule, stop conceding, accept that this may end the relationship. Still only facts and consequences — no profanity, no personal attacks, no threats.";
+"tone.cool" = "Hold off";
+"tone.cool.g" = "Don’t commit, don’t take the bait, keep the decision yours. Short, calm, no explaining, no promises — buy yourself time.";
+
+/* ── Built-in relationships ── */
+"rel.none" = "Default";
+"rel.family" = "Family";
+"rel.family.g" = "You can’t opt out of family; anything said harshly you’ll live with for years. Be direct, set a boundary — but don’t drag up old grievances or pass judgment on who they are. Settle this one thing; keeping the relationship matters more than winning this round.";
+"rel.friend" = "Friend";
+"rel.friend.g" = "Equals, no hierarchy. You can be candid, jokes and self-deprecation are fine — but don’t use “we’re close” as licence to decide for them or to overstep.";
+"rel.partner" = "Partner";
+"rel.partner.g" = "Feelings weigh more than logic here. Receive how they feel before addressing the thing itself; no old grievances, no character verdicts, no silent treatment or ultimatums.";
+"rel.client" = "Client";
+"rel.client.g" = "There’s a commercial boundary. Hold scope, dates and price; polite but not free. Put in writing whatever needs to be, so a verbal aside doesn’t become an obligation.";
+"rel.boss" = "Boss";
+"rel.boss.g" = "There’s a power gap; pushing back head-on costs you. Don’t defy, but don’t silently accept a request they left vague either. Put cost, schedule and priority on the table and let them choose between options rather than you absorbing it alone.";
+
+/* ── Common ── */
+"common.cancel" = "Cancel";
+"common.save" = "Save";
+"common.close" = "Close";

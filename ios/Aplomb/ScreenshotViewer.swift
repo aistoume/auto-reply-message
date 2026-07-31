@@ -68,7 +68,7 @@ struct ScreenshotViewer: View {
                     .padding(.top, 8)
                 }
                 Spacer()
-                Text("双指缩放 · 双击放大 · 拖动查看")
+                Text(L("viewer.hint"))
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.55))
                     .padding(.bottom, 24)

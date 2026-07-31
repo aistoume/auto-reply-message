@@ -32,7 +32,7 @@ struct ReplyCardView: View {
             }
 
             if !draft.subtext.isEmpty {
-                Text("潜台词：\(draft.subtext)")
+                Text(L("card.subtext", draft.subtext))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -59,7 +59,7 @@ struct ReplyCardView: View {
             }
 
             if !draft.note.isEmpty {
-                Text("建议：\(draft.note)")
+                Text(L("card.note", draft.note))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -72,7 +72,7 @@ struct ReplyCardView: View {
                     copied = false
                 }
             } label: {
-                Label(copied ? "已复制，回聊天里粘贴" : "复制正文", systemImage: copied ? "checkmark" : "doc.on.doc")
+                Label(L(copied ? "card.copied" : "card.copy"), systemImage: copied ? "checkmark" : "doc.on.doc")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)

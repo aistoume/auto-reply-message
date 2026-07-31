@@ -20,9 +20,9 @@ final class Subscriptions: ObservableObject {
 
         var title: String {
             switch self {
-            case .lite: return "轻度"
-            case .plus: return "常用"
-            case .pro:  return "重度"
+            case .lite: return L("tier.lite")
+            case .plus: return L("tier.plus")
+            case .pro:  return L("tier.pro")
             }
         }
         /// 每月发多少格 —— 与服务端 TIERS 保持一致。
@@ -35,9 +35,9 @@ final class Subscriptions: ObservableObject {
         }
         var blurb: String {
             switch self {
-            case .lite: return "偶尔遇到难回的消息"
-            case .plus: return "每天都要应付几条"
-            case .pro:  return "工作日高频使用"
+            case .lite: return L("tier.lite.blurb")
+            case .plus: return L("tier.plus.blurb")
+            case .pro:  return L("tier.pro.blurb")
             }
         }
     }

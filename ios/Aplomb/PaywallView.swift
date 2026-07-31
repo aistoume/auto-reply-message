@@ -17,22 +17,22 @@ struct PaywallView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("每月自动续电")
+                        Text(L("paywall.head"))
                             .font(.title2.weight(.bold))
-                        Text("一次拟稿用一格电。选一档，每个月自动回满。")
+                        Text(L("paywall.sub"))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
 
                     if let active = store.activeTier {
-                        Label("当前：\(active.title)（每月 \(active.bars) 格）",
+                        Label(L("paywall.current", active.title, active.bars),
                               systemImage: "checkmark.seal.fill")
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(.green)
                     }
 
                     if store.products.isEmpty {
-                        ProgressView("读取中…").frame(maxWidth: .infinity, minHeight: 120)
+                        ProgressView(L("paywall.loading")).frame(maxWidth: .infinity, minHeight: 120)
                     } else {
                         ForEach(store.products, id: \.id) { product in
                             tierCard(product)
@@ -43,26 +43,26 @@ struct PaywallView: View {
                         Text(err).font(.footnote).foregroundStyle(.orange)
                     }
 
-                    Button("恢复购买") {
+                    Button(L("paywall.restore")) {
                         Task { await store.restore(battery: battery) }
                     }
                     .font(.footnote)
                     .frame(maxWidth: .infinity)
 
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("订阅按月自动续期，可随时在系统「订阅」里取消。")
-                        Text("不想订阅也行：在设置里填自己的 Anthropic API key，走你自己的账户，功能完全一样。")
+                        Text(L("paywall.terms"))
+                        Text(L("paywall.byok"))
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 }
                 .padding()
             }
-            .navigationTitle("续电")
+            .navigationTitle(L("paywall.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("关闭") { dismiss() }
+                    Button(L("common.close")) { dismiss() }
                 }
             }
             .task {
@@ -82,7 +82,7 @@ struct PaywallView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(tier?.title ?? product.displayName)
                         .font(.headline)
-                    Text("每月 \(tier?.bars ?? 0) 格电")
+                    Text(L("paywall.bars_month", tier?.bars ?? 0))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Text(tier?.blurb ?? "")
@@ -93,7 +93,7 @@ struct PaywallView: View {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(product.displayPrice)
                         .font(.title3.weight(.semibold))
-                    Text("/ 月").font(.caption2).foregroundStyle(.secondary)
+                    Text(L("paywall.per_month")).font(.caption2).foregroundStyle(.secondary)
                 }
             }
             .padding(14)
