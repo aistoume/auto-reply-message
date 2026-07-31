@@ -145,6 +145,7 @@ struct DraftView: View {
     @StateObject private var model = DraftModel()
     @State private var tones = ToneConfig.load()
     @State private var picking: PhotosPickerItem?
+    @State private var zoomed = false
 
     var body: some View {
         NavigationStack {
@@ -166,6 +167,17 @@ struct DraftView: View {
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12).strokeBorder(.quaternary)
                                 )
+                                // 缩略图只够认出是哪段对话；要核对细节点开看
+                                .overlay(alignment: .bottomTrailing) {
+                                    Image(systemName: "arrow.up.left.and.arrow.down.right")
+                                        .font(.system(size: 11, weight: .semibold))
+                                        .foregroundStyle(.white)
+                                        .padding(6)
+                                        .background(.black.opacity(0.45), in: Circle())
+                                        .padding(8)
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture { zoomed = true }
                         } else {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(.quaternary)
@@ -236,6 +248,9 @@ struct DraftView: View {
                 }
             }
             .onAppear { tones = ToneConfig.load() }
+            .fullScreenCover(isPresented: $zoomed) {
+                if let shot = model.shot { ScreenshotViewer(image: shot) }
+            }
             // 悬浮球 / 轻点背面 / 快捷指令进来的请求：直接跑到出稿，
             // 省掉「打开 app → 找截图 → 选语气」三步
             .onChange(of: pending.nonce) { _, n in
