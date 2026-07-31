@@ -10,3 +10,6 @@ captures/
 # release signing — NEVER commit
 *.keystore
 keystore.properties
+
+# 导出的上传包 —— 每次归档都会重生成,不进版本库
+ios/build/
