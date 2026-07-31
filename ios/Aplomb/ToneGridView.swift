@@ -31,18 +31,31 @@ struct ToneGridView: View {
                     .background(tone.color, in: RoundedRectangle(cornerRadius: 14))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
-                            .strokeBorder(.white, lineWidth: highlighted(tone) ? 2.5 : 0)
+                            .strokeBorder(.white, lineWidth: chosen(tone) ? 2.5 : 0)
                     )
-                    .shadow(color: .black.opacity(0.1), radius: 3, y: 2)
+                    // 拟稿中/已出稿时，没被选中的档位压暗并缩一点 ——
+                    // 一眼看出「这一稿是哪一档写的」，不用回想刚才点了哪个
+                    .opacity(dimmed(tone) ? 0.32 : 1)
+                    .scaleEffect(chosen(tone) ? 1.04 : 1)
+                    .shadow(color: .black.opacity(chosen(tone) ? 0.18 : 0.1),
+                            radius: chosen(tone) ? 5 : 3, y: 2)
+                    .animation(.spring(duration: 0.25), value: active?.id)
                 }
                 .buttonStyle(.plain)
             }
         }
     }
 
-    private func highlighted(_ tone: Tone) -> Bool {
+    /// 当前这一稿用的档位（没出稿时退回「上次用过的」做个弱提示）。
+    private func chosen(_ tone: Tone) -> Bool {
         if let active { return tone.id == active.id }
         return tone.id == Prefs.lastToneId
+    }
+
+    /// 有明确选中的档位时，其余压暗；没选中时一律正常亮度。
+    private func dimmed(_ tone: Tone) -> Bool {
+        guard let active else { return false }
+        return tone.id != active.id
     }
 }
 

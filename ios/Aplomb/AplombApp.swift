@@ -222,13 +222,17 @@ struct DraftView: View {
                         }
                     }
 
-                    if model.busy { ProgressView().frame(maxWidth: .infinity) }
+                    if model.busy {
+                        ProgressView().frame(maxWidth: .infinity).padding(.vertical, 8)
+                    }
 
                     if let status = model.status {
                         Text(status)
                             .font(.callout)
                             .foregroundStyle(model.outOfBattery ? .orange : .secondary)
                     }
+                    // 滚动锚点：点完语气立刻滚到这儿，等待和结果都在这一屏
+                    Color.clear.frame(height: 1).id("result")
 
                     if let draft = model.draft {
                         ReplyCardView(draft: draft, tone: model.activeTone, tones: tones) { tone in
@@ -246,6 +250,12 @@ struct DraftView: View {
                 .padding()
             }
             // 出稿即滚到回复 —— 拟完还要自己往下拖是最没道理的一步
+            // 点下语气的那一刻就滚过去 —— 让用户看到「已经在干活了」，
+            // 而不是留在语气区猜有没有点中
+            .onChange(of: model.busy) { _, busy in
+                guard busy else { return }
+                withAnimation { proxy.scrollTo("result", anchor: .center) }
+            }
             .onChange(of: model.draft) { _, d in
                 guard d != nil else { return }
                 withAnimation { proxy.scrollTo("reply", anchor: .top) }
@@ -306,11 +316,18 @@ struct DraftView: View {
     }
 }
 
-/// 电池条 —— 免费额度的可视化，用完变成「填自己的 key」的入口。
+/// 电池条 —— 余量可视化，同时是订阅入口。
 struct BatteryBar: View {
     @EnvironmentObject private var battery: BatteryClient
+    @State private var paywall = false
 
     var body: some View {
+        content
+            .sheet(isPresented: $paywall) { PaywallView() }
+    }
+
+    @ViewBuilder
+    private var content: some View {
         if !Prefs.apiKey.isEmpty {
             Label("用的是你自己的 API key", systemImage: "key.fill")
                 .font(.footnote)
@@ -320,12 +337,14 @@ struct BatteryBar: View {
                 HStack {
                     Image(systemName: b.isEmpty ? "battery.0percent" : "battery.100percent")
                         .foregroundStyle(b.isEmpty ? .red : .green)
-                    Text(b.isEmpty ? "免费电池已用完" : "免费电池 \(b.bars)/\(b.barsTotal) 格")
+                    Text(label(b))
                         .font(.subheadline.weight(.medium))
                     Spacer()
-                    if b.drafts > 0 {
-                        Text("已拟 \(b.drafts) 稿").font(.caption).foregroundStyle(.secondary)
-                    }
+                    // 没电时把订阅入口顶到最显眼处；有电时留个低调的「续电」
+                    Button(b.isEmpty ? "去续电" : "续电") { paywall = true }
+                        .font(.caption.weight(b.isEmpty ? .semibold : .regular))
+                        .buttonStyle(.plain)
+                        .foregroundStyle(b.isEmpty ? .orange : .secondary)
                 }
                 ProgressView(value: b.fraction)
                     .tint(b.isEmpty ? .red : .green)
@@ -335,5 +354,11 @@ struct BatteryBar: View {
         } else if battery.claiming {
             ProgressView("正在领取免费电池…").font(.footnote)
         }
+    }
+
+    private func label(_ b: BatteryClient.Battery) -> String {
+        if b.isEmpty { return b.isSubscribed ? "本月电池已用完" : "免费电池已用完" }
+        let prefix = b.isSubscribed ? "本月电池" : "免费电池"
+        return "\(prefix) \(b.bars)/\(b.barsTotal) 格"
     }
 }

@@ -1,0 +1,82 @@
+{
+  "identifier": "APLOMB-STOREKIT",
+  "nonRenewingSubscriptions": [],
+  "products": [],
+  "settings": {
+    "_locale": "zh_CN",
+    "_storefront": "USA"
+  },
+  "subscriptionGroups": [
+    {
+      "id": "APLOMB-GROUP",
+      "name": "Aplomb 电池",
+      "localizations": [],
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "displayPrice": "2.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "SUB-LITE",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "每月 100 格电",
+              "displayName": "轻度",
+              "locale": "zh_CN"
+            }
+          ],
+          "productID": "aplomb.sub.lite",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Lite",
+          "subscriptionGroupID": "APLOMB-GROUP",
+          "type": "RecurringSubscription"
+        },
+        {
+          "adHocOffers": [],
+          "displayPrice": "6.99",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "SUB-PLUS",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "每月 300 格电",
+              "displayName": "常用",
+              "locale": "zh_CN"
+            }
+          ],
+          "productID": "aplomb.sub.plus",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Plus",
+          "subscriptionGroupID": "APLOMB-GROUP",
+          "type": "RecurringSubscription"
+        },
+        {
+          "adHocOffers": [],
+          "displayPrice": "19.99",
+          "familyShareable": false,
+          "groupNumber": 3,
+          "internalID": "SUB-PRO",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "每月 1000 格电",
+              "displayName": "重度",
+              "locale": "zh_CN"
+            }
+          ],
+          "productID": "aplomb.sub.pro",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Pro",
+          "subscriptionGroupID": "APLOMB-GROUP",
+          "type": "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 4,
+    "minor": 0
+  }
+}

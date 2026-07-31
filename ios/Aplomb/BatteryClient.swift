@@ -14,6 +14,12 @@ final class BatteryClient: ObservableObject {
         var bars: Int
         var barsTotal: Int
         var drafts: Int
+        /// 订阅档位 id；nil = 还在免费试用
+        var tier: String?
+        /// 本期结束时间（毫秒时间戳，苹果给的）
+        var renewsAt: Double?
+
+        var isSubscribed: Bool { tier != nil }
 
         var fraction: Double { barsTotal > 0 ? Double(bars) / Double(barsTotal) : 0 }
         var isEmpty: Bool { bars <= 0 }
@@ -100,6 +106,26 @@ final class BatteryClient: ObservableObject {
         }
         battery = ok.battery
         return ok.text
+    }
+
+    /// 把 App Store 的交易报给后端换本月电池。后端验签通过才发。
+    func subscribe(productId: String, transactionId: String) async throws {
+        guard let t = token else { throw Failure(message: "电池还没领到，稍后再试") }
+        struct Req: Encodable { let productId: String; let transactionId: String }
+        struct Res: Decodable { let battery: Battery; let granted: Bool }
+        struct Err: Decodable { let error: String?; let message: String? }
+
+        var req = request("subscribe", method: "POST")
+        req.setValue("Bearer \(t)", forHTTPHeaderField: "authorization")
+        req.httpBody = try JSONEncoder().encode(
+            Req(productId: productId, transactionId: transactionId)
+        )
+        let (data, resp) = try await send(req)
+        guard resp.statusCode == 200, let ok = try? JSONDecoder().decode(Res.self, from: data) else {
+            let err = try? JSONDecoder().decode(Err.self, from: data)
+            throw Failure(message: err?.message ?? "开通失败（\(resp.statusCode)）")
+        }
+        battery = ok.battery
     }
 
     // ── plumbing ───────────────────────────────────────────────────────
