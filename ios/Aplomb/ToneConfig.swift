@@ -17,10 +17,41 @@ struct Tone: Identifiable, Codable, Equatable {
 enum ToneConfig {
     private static let key = "tones.v1"
 
+    /**
+     出厂档位 —— 按「从暖到远」排。
+
+     早先只有四档，全是防守型的（体面/绵里藏针/掀桌/冷处理）；但日常聊天里
+     要把关系往前推的场合其实更多——道谢、接住好意、干脆答应、开个玩笑、
+     安慰一句。只给防守档，等于逼用户在「客气地拒绝」和「翻脸」之间二选一。
+     */
     static let defaults: [Tone] = [
+        Tone(
+            id: "warm", emoji: "😊", name: "热情", colorHex: "#F97316",
+            guidance: "真心接住对方的好意或消息，把关系往前推一步。可以具体夸到点子上、可以主动多说一句，但不谄媚、不说空话套话。"
+        ),
+        Tone(
+            id: "thanks", emoji: "🙏", name: "感谢", colorHex: "#EAB308",
+            guidance: "把谢意说具体：谢对方做的哪一件事、对你意味着什么。别停在「谢谢」两个字，也别夸张到让对方有负担。"
+        ),
+        Tone(
+            id: "yes", emoji: "👍", name: "爽快", colorHex: "#22C55E",
+            guidance: "干脆答应，把事往前推。明确说清你会做什么、什么时候给——痛快接下但不含糊承诺没把握的部分。"
+        ),
+        Tone(
+            id: "humor", emoji: "😄", name: "幽默", colorHex: "#06B6D4",
+            guidance: "用轻松和自嘲化解，把气氛带回来。玩笑对事不对人，不阴阳怪气、不用讽刺当武器；如果这事根本笑不出来，就别硬开玩笑。"
+        ),
+        Tone(
+            id: "comfort", emoji: "🤗", name: "安慰", colorHex: "#F472B6",
+            guidance: "对方在难受或诉苦时用。先接住情绪、别急着给建议或讲道理；说人话，不喊口号，不轻飘飘地说「都会好的」。"
+        ),
         Tone(
             id: "decent", emoji: "🙂", name: "体面", colorHex: "#3B82F6",
             guidance: "保留关系、留有余地，对方容易接受。把事情往前推，不追究、不上价值，但也不白白答应对方没说清的要求。"
+        ),
+        Tone(
+            id: "ask", emoji: "❓", name: "追问", colorHex: "#8B5CF6",
+            guidance: "信息不够就先别表态。问到关键的那一两点（要什么、什么时候、多少），把球礼貌地推回去，问完再决定。"
         ),
         Tone(
             id: "needle", emoji: "🪡", name: "绵里藏针", colorHex: "#D97706",
@@ -36,14 +67,23 @@ enum ToneConfig {
         ),
     ]
 
-    /// 轮盘一屏最多放 6 格。
-    static let maxTones = 6
+    /// 横排可滑，放得下更多；上限存在只是防止列表长到没法用。
+    static let maxTones = 14
+
+    /// 旧版出厂的四档 id —— 用来认出「从没改过档位」的老用户。
+    private static let legacyDefaultIds: Set<String> = ["decent", "needle", "table", "cool"]
 
     static func load() -> [Tone] {
         guard let data = UserDefaults.standard.data(forKey: key),
               let tones = try? JSONDecoder().decode([Tone].self, from: data),
               !tones.isEmpty
         else { return defaults }
+        // 老用户如果一档都没改过，直接给新的一整套；改过的一律不碰，
+        // 用户自定义的东西不该因为我们加了默认项就被冲掉。
+        if tones.count == 4, Set(tones.map(\.id)) == legacyDefaultIds {
+            save(defaults)
+            return defaults
+        }
         return tones
     }
 

@@ -125,7 +125,7 @@ final class DraftModel: ObservableObject {
                     toneEmoji: tone.emoji, toneName: tone.name, text: parsed.reply
                 ))
             } else {
-                status = "没读懂这屏内容，换个角度再试一次"
+                status = "这次没出稿，换一档语气或重截一张试试（没有扣电）"
             }
         } catch let e as BatteryClient.Empty {
             outOfBattery = true

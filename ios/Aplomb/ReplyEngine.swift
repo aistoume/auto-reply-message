@@ -59,6 +59,14 @@ enum ReplyEngine {
         - theirLanguage：如实写出你认出的语言（混用就写「中英夹杂」这样）。
         - subtext / risk / note：一律用 \(myLanguage) 写给机主看。
 
+        【看不清也要出稿 —— 不许摆烂】
+        截图糊、被遮住、只看到半句话，都要基于看得到的部分给出一份能用的稿子。
+        不确定的地方写进 risk 提醒机主，但 reply 不许空着、不许写「看不清」「无法识别」
+        之类的话——那等于让机主白等一场。
+        实在判断不出这一档该怎么写（比如选了「安慰」但对方在谈价钱），就用最接近的
+        说话方式写，并在 note 里说明你换了个方向。
+        只有截图里**完全没有任何对话**时，才把 reply 留空。
+
         【分寸底线 —— 任何档位都适用】
         - 不要脏字、人身攻击、威胁、造谣。
         - 最狠的档位也是「把规则讲清楚、守住底线」，不是撕破脸骂人。
@@ -77,18 +85,23 @@ enum ReplyEngine {
         """
     }
 
-    /// 模型偶尔会在 JSON 前后带一句话或裹代码块，所以取第一个 `{` 到最后一个 `}`。
+    /**
+     模型偶尔会在 JSON 前后带一句话或裹代码块，所以取第一个 `{` 到最后一个 `}`。
+
+     解析不出 JSON 时**不当失败**：只要模型写了像样的正文，就直接拿来当稿子。
+     让用户为「格式没对上」白等一场、白花一格电，是最没道理的失败方式。
+     */
     static func parse(_ raw: String) -> Draft? {
         guard let start = raw.firstIndex(of: "{"),
               let end = raw.lastIndex(of: "}"),
               start < end
-        else { return nil }
+        else { return salvage(raw) }
         let slice = String(raw[start...end])
         guard let data = slice.data(using: .utf8),
               let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-        else { return nil }
+        else { return salvage(raw) }
         let reply = (obj["reply"] as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !reply.isEmpty else { return nil }
+        guard !reply.isEmpty else { return salvage(raw) }
         func str(_ k: String) -> String {
             (obj[k] as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         }
@@ -99,6 +112,24 @@ enum ReplyEngine {
             reply: reply,
             replyGloss: str("replyGloss"),
             note: str("note")
+        )
+    }
+
+    /// 兜底：模型没吐 JSON，但写了东西 —— 当正文使，总好过报错。
+    private static func salvage(_ raw: String) -> Draft? {
+        let text = raw
+            .replacingOccurrences(of: "```json", with: "")
+            .replacingOccurrences(of: "```", with: "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        // 太短的多半是「我看不清」这类废话，不值得占用户一格电的信任
+        guard text.count >= 8 else { return nil }
+        return Draft(
+            theirLanguage: "",
+            subtext: "",
+            risk: "这份稿子没按标准格式返回，已按原文呈现 —— 发之前请自己再读一遍。",
+            reply: text,
+            replyGloss: "",
+            note: ""
         )
     }
 }
