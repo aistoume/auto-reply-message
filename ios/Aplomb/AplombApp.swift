@@ -241,7 +241,9 @@ struct DraftView: View {
             .onChange(of: pending.nonce) { _, n in
                 guard n > 0 else { return }
                 tones = ToneConfig.load()
-                guard let tone = pending.resolve(from: tones) else { return }
+                // 快捷指令指定了语气 → 直接出稿；没指定 → 只把截图备好，
+                // 让用户自己挑一档再开始（截完图就自作主张开跑很讨厌）
+                let tone = pending.resolve(from: tones)
                 let handed = pending.image
                 if let handed {
                     model.shot = handed
@@ -252,6 +254,7 @@ struct DraftView: View {
                     model.shot = nil
                     model.loadLatestScreenshot(maxAge: 90)
                 }
+                guard let tone else { return }   // 没指定语气就到此为止，等用户挑
                 Task {
                     for _ in 0..<20 where model.shot == nil && model.status == nil {
                         try? await Task.sleep(for: .milliseconds(100))

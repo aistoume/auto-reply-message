@@ -34,14 +34,16 @@ final class PendingDraft: ObservableObject {
         nonce += 1
     }
 
-    /// 把 toneKey 解析成真正的档位；解析不到就退回上次用过的、再退回第一档。
+    /**
+     把 toneKey 解析成档位。**解析不到就返回 nil，绝不擅自兜底**。
+
+     兜底成「上次那档」看着贴心，实际是拿用户的电池去赌他想要哪个语气 ——
+     截完图直接开跑，人还没来得及看一眼对话。所以：快捷指令里明确指定了
+     语气才自动跑，没指定就只备好截图，等用户自己挑。
+     */
     func resolve(from tones: [Tone]) -> Tone? {
-        if let key = toneKey?.lowercased(), !key.isEmpty {
-            if let hit = tones.first(where: { $0.id.lowercased() == key || $0.name.lowercased() == key }) {
-                return hit
-            }
-        }
-        return tones.first { $0.id == Prefs.lastToneId } ?? tones.first
+        guard let key = toneKey?.lowercased(), !key.isEmpty else { return nil }
+        return tones.first { $0.id.lowercased() == key || $0.name.lowercased() == key }
     }
 }
 
