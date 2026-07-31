@@ -221,17 +221,20 @@ Three auto-renewable subscriptions (Light / Regular / Heavy) refill the monthly 
 
 ## 四、Age Rating 问卷（App Information 页面里点 Edit）
 
-诚实答完大概会落在 **13+**。关键几项：
+七步问卷。**Step 1 (Capabilities) 六项全部 NO：**
 
-| 问题 | 答 |
-|---|---|
-| Violence / Sexual Content / Profanity / Drugs / Gambling / Horror | 全部 None |
-| **Unrestricted Web Access** | **No** |
-| **User Generated Content** | **No**（用户之间没有内容互通） |
-| **AI-generated / chatbot content**（新增题）| **Yes** —— app 会产出模型生成的文本 |
-| Medical/Treatment Info | No |
+| 问题 | 答 | 理由 |
+|---|---|---|
+| Unrestricted Web Access | **NO** | app 里没有浏览器 |
+| User-Generated Content | **NO** | 用户之间没有内容分发 |
+| Social Media | **NO** | 没有信息流、没有传播机制 |
+| Social Media Disabled for Users Under 13 | **NO** | 选 YES 等于声称接了 Declared Age Range API，我们没接 |
+| Messaging and Chat | **NO** | 用户之间不能互相通信；通信发生在别的 app 里，Aplomb 自己不收不发 |
+| Advertising | **NO** | 没有广告 |
 
-> AI 那题必须答 Yes。答 No 被查出来是「误导审核」，比拿 13+ 严重得多。
+**Step 2–7（内容分级）全部 None。** 站得住的理由：prompt 里写死了不脏字、不人身攻击、不威胁、不造谣，最狠的语气也只讲事实和后果——这是产品约束，不是侥幸。
+
+> ⚠️ 如果任何一步出现关于 **AI 生成内容 / chatbot** 的问题，**必须答 Yes**。这个 app 就是模型生成文本。瞒报算「误导审核」，比拿一个高分级严重得多。
 
 ---
 
