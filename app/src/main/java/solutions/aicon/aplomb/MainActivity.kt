@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     )
     private lateinit var keyArea: LinearLayout
     private lateinit var toneArea: LinearLayout
+    private lateinit var relArea: LinearLayout
+    private lateinit var batteryLine: TextView
     private lateinit var kbdBtn: Button
 
     private val notifPerm =
@@ -138,7 +140,44 @@ class MainActivity : AppCompatActivity() {
             addTextChangedListener(watcher { Prefs.setPersona(this@MainActivity, it) })
         })
 
-        // ── 5 · 情绪档位 ──
+        // ── 5 · 电池 ──
+        root.addView(section(getString(R.string.sec_battery)))
+        batteryLine = TextView(this).apply {
+            text = getString(R.string.battery_claiming); textSize = 15f
+        }
+        root.addView(batteryLine)
+        root.addView(TextView(this).apply {
+            text = getString(R.string.battery_help); textSize = 12f; setTextColor(Color.GRAY)
+            setPadding(0, dp(6), 0, dp(8))
+        })
+        root.addView(Button(this).apply {
+            text = getString(R.string.battery_topup)
+            setOnClickListener { Subscriptions.showPaywall(this@MainActivity) { refreshBattery() } }
+        })
+
+        // ── 6 · 对方是谁 ──
+        root.addView(section(getString(R.string.sec_relations)))
+        root.addView(TextView(this).apply {
+            text = getString(R.string.relations_help); textSize = 12f; setTextColor(Color.GRAY)
+            setPadding(0, 0, 0, dp(8))
+        })
+        relArea = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        root.addView(relArea)
+        root.addView(Button(this).apply {
+            text = getString(R.string.rel_add)
+            setOnClickListener {
+                if (!RelationConfig.store.canAdd(this@MainActivity)) {
+                    toast(getString(R.string.rel_full)); return@setOnClickListener
+                }
+                editItem(RelationConfig.store, null, isRelation = true)
+            }
+        })
+        root.addView(Button(this).apply {
+            text = getString(R.string.rel_reset)
+            setOnClickListener { RelationConfig.store.reset(this@MainActivity); renderAll() }
+        })
+
+        // ── 7 · 情绪档位 ──
         root.addView(section(getString(R.string.sec_tones)))
         root.addView(TextView(this).apply {
             text = getString(R.string.tones_help); textSize = 12f; setTextColor(Color.GRAY)
@@ -149,18 +188,20 @@ class MainActivity : AppCompatActivity() {
         root.addView(Button(this).apply {
             text = getString(R.string.tone_add)
             setOnClickListener {
-                val tones = ToneConfig.load(this@MainActivity)
-                if (tones.size >= ToneConfig.MAX_TONES) { toast(getString(R.string.tone_full)); return@setOnClickListener }
-                editTone(null)
+                if (!ToneConfig.store.canAdd(this@MainActivity)) {
+                    toast(getString(R.string.tone_full)); return@setOnClickListener
+                }
+                editItem(ToneConfig.store, null, isRelation = false)
             }
         })
         root.addView(Button(this).apply {
             text = getString(R.string.tone_reset)
-            setOnClickListener { ToneConfig.reset(this@MainActivity); renderTones() }
+            setOnClickListener { ToneConfig.store.reset(this@MainActivity); renderAll() }
         })
-        renderTones()
+        renderAll()
 
         setContentView(ScrollView(this).apply { addView(root) })
+        refreshBattery()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
@@ -214,9 +255,19 @@ class MainActivity : AppCompatActivity() {
 
     // ── 情绪档位编辑 ───────────────────────────────────────────────────
 
-    private fun renderTones() {
-        toneArea.removeAllViews()
-        ToneConfig.load(this).forEach { t ->
+    private fun renderAll() {
+        renderCatalog(relArea, RelationConfig.store, RelationConfig.load(this), isRelation = true)
+        renderCatalog(toneArea, ToneConfig.store, ToneConfig.load(this), isRelation = false)
+    }
+
+    private fun renderCatalog(
+        area: LinearLayout,
+        catalog: Catalog,
+        items: List<Tone>,
+        isRelation: Boolean,
+    ) {
+        area.removeAllViews()
+        items.forEach { t ->
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
@@ -234,19 +285,24 @@ class MainActivity : AppCompatActivity() {
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 addView(TextView(this@MainActivity).apply { text = t.name; textSize = 15f })
                 addView(TextView(this@MainActivity).apply {
-                    text = t.guidance; textSize = 11f; setTextColor(Color.GRAY)
+                    // 「默认」关系本来就没有设定，留白看着像没加载出来，给一句说明
+                    text = t.guidance.ifBlank {
+                        if (isRelation) getString(R.string.rel_none_guidance) else ""
+                    }
+                    textSize = 11f; setTextColor(Color.GRAY)
                     maxLines = 2; ellipsize = android.text.TextUtils.TruncateAt.END
                 })
             })
-            row.setOnClickListener { editTone(t) }
-            toneArea.addView(row)
-            toneArea.addView(View(this).apply {
+            row.setOnClickListener { editItem(catalog, t, isRelation) }
+            area.addView(row)
+            area.addView(View(this).apply {
                 layoutParams = LinearLayout.LayoutParams(1, dp(8))
             })
         }
     }
 
-    private fun editTone(existing: Tone?) {
+    /** 编辑一格 —— 语气和关系共用，差别只在标题和提示语。 */
+    private fun editItem(catalog: Catalog, existing: Tone?, isRelation: Boolean) {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(20), dp(8), dp(20), 0)
@@ -255,10 +311,12 @@ class MainActivity : AppCompatActivity() {
             hint = getString(R.string.tone_emoji_hint); setText(existing?.emoji ?: "💬")
         }
         val name = EditText(this).apply {
-            hint = getString(R.string.tone_name_hint); setText(existing?.name ?: "")
+            hint = getString(if (isRelation) R.string.rel_name_hint else R.string.tone_name_hint)
+            setText(existing?.name ?: "")
         }
         val guidance = EditText(this).apply {
-            hint = getString(R.string.tone_guidance_hint); setText(existing?.guidance ?: "")
+            hint = getString(if (isRelation) R.string.rel_guidance_hint else R.string.tone_guidance_hint)
+            setText(existing?.guidance ?: "")
             minLines = 3
         }
         box.addView(emoji); box.addView(name); box.addView(guidance)
@@ -288,31 +346,62 @@ class MainActivity : AppCompatActivity() {
         paintStrip()
         box.addView(strip)
 
+        val addTitle = if (isRelation) R.string.rel_add else R.string.tone_add
+        val editTitle = if (isRelation) R.string.rel_edit else R.string.tone_edit
         val b = AlertDialog.Builder(this)
-            .setTitle(if (existing == null) R.string.tone_add else R.string.tone_edit)
+            .setTitle(if (existing == null) addTitle else editTitle)
             .setView(ScrollView(this).apply { addView(box) })
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 val n = name.text.toString().trim()
                 val g = guidance.text.toString().trim()
-                if (n.isBlank() || g.isBlank()) { toast(getString(R.string.tone_incomplete)); return@setPositiveButton }
-                val tones = ToneConfig.load(this).toMutableList()
-                val next = Tone(
-                    existing?.id ?: java.util.UUID.randomUUID().toString(),
-                    emoji.text.toString().trim().ifBlank { "💬" }, n, picked, g,
+                // 关系可以只有名字没设定（「默认」就是这样）；语气必须说清怎么说话
+                if (n.isBlank() || (!isRelation && g.isBlank())) {
+                    toast(getString(R.string.tone_incomplete)); return@setPositiveButton
+                }
+                catalog.upsert(
+                    this,
+                    Tone(
+                        existing?.id ?: java.util.UUID.randomUUID().toString(),
+                        emoji.text.toString().trim().ifBlank { "💬" }, n, picked, g,
+                    ),
                 )
-                val i = tones.indexOfFirst { it.id == next.id }
-                if (i >= 0) tones[i] = next else tones.add(next)
-                ToneConfig.save(this, tones); renderTones()
+                renderAll()
             }
             .setNegativeButton(android.R.string.cancel, null)
         if (existing != null) {
             b.setNeutralButton(R.string.tone_delete) { _, _ ->
-                val tones = ToneConfig.load(this).filterNot { it.id == existing.id }
-                if (tones.isEmpty()) { toast(getString(R.string.tone_need_one)); return@setNeutralButton }
-                ToneConfig.save(this, tones); renderTones()
+                if (catalog.load(this).size <= 1) {
+                    toast(getString(R.string.tone_need_one)); return@setNeutralButton
+                }
+                catalog.remove(this, existing.id); renderAll()
             }
         }
         b.show()
+    }
+
+    // ── 电池 ───────────────────────────────────────────────────────────
+
+    /**
+     * 刷电池条。自带 key 的人根本不走服务器，显示格数只会让人以为额度用完了
+     * 就不能用了 —— 所以那种情况直接说明在用自己的 key。
+     */
+    private fun refreshBattery() {
+        if (Prefs.activeKey(this).isNotBlank()) {
+            batteryLine.text = getString(R.string.battery_own_key)
+            return
+        }
+        batteryLine.text = getString(R.string.battery_claiming)
+        Thread {
+            val b = BatteryClient.battery(this)
+            runOnUiThread {
+                batteryLine.text = when {
+                    b == null -> getString(R.string.battery_offline)
+                    b.bars <= 0 -> getString(R.string.battery_empty)
+                    b.subscribed -> getString(R.string.battery_month, b.bars, b.barsTotal)
+                    else -> getString(R.string.battery_free, b.bars, b.barsTotal)
+                }
+            }
+        }.start()
     }
 
     // ── 小工具 ─────────────────────────────────────────────────────────

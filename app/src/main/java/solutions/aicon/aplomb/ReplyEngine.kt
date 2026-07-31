@@ -40,15 +40,50 @@ object ReplyEngine {
      * @param tone     选中的情绪档位
      * @param extra    用户临时补充的意图（可空）
      */
-    fun draft(context: Context, b64: String, tone: Tone, extra: String = ""): Draft? {
+    /**
+     * 出稿结果。
+     *
+     * 之前只回 `Draft?`，失败一律显示「这次没出稿」——但「电池用完了」和
+     * 「模型没读懂」需要的下一步完全不同，前者要引导去续电，后者要换个档位
+     * 重试。所以把失败原因带出来。
+     */
+    class Outcome(val draft: Draft?, val error: String?)
+
+    fun draft(
+        context: Context,
+        b64: String,
+        tone: Tone,
+        relation: Tone? = null,
+        extra: String = "",
+    ): Outcome {
         val myLang = Prefs.myLanguageLabel(context)
         val persona = Prefs.persona(context).trim()
-        val prompt = buildPrompt(tone, myLang, persona, extra)
-        val raw = runCatching { vision(context, b64, prompt) }.getOrNull() ?: return null
-        return parse(raw)
+        val prompt = buildPrompt(tone, relation, myLang, persona, extra)
+
+        // 填了自己的 key 就直连模型厂商，我们的服务器完全不参与。
+        if (Prefs.activeKey(context).isNotBlank()) {
+            val raw = runCatching { vision(context, b64, prompt) }.getOrNull()
+                ?: return Outcome(null, context.getString(R.string.card_failed))
+            return Outcome(parse(raw), null)
+        }
+
+        val r = BatteryClient.draft(context, b64, prompt)
+        val text = r.text ?: return Outcome(null, r.error)
+        val parsed = parse(text)
+        return Outcome(parsed, if (parsed == null) context.getString(R.string.card_failed) else null)
     }
 
-    private fun buildPrompt(tone: Tone, myLang: String, persona: String, extra: String): String {
+    private fun buildPrompt(
+        tone: Tone,
+        relation: Tone?,
+        myLang: String,
+        persona: String,
+        extra: String,
+    ): String {
+        // 关系写在档位**前面** —— 同一个「掀桌」对老板和对恋人不是一回事，
+        // 得先让模型知道这层关系，档位要求才有正确的落点。
+        val relationLine = if (relation == null || relation.guidance.isBlank()) ""
+        else "\n【对方是谁】${relation.name}\n【这层关系里要注意的】${relation.guidance}"
         val personaLine = if (persona.isBlank()) ""
         else "\n机主补充的自我设定（影响语气与身份，但不改变上面的分档要求）：$persona"
         val extraLine = if (extra.isBlank()) ""
@@ -58,7 +93,7 @@ object ReplyEngine {
 
 先判断谁是谁：截图里靠右/用主题色的气泡是机主自己发的，靠左的是对方。最新一条通常在底部。
 
-然后按下面的档位替机主写回复。
+然后按下面的档位替机主写回复。$relationLine
 
 【本次档位】${tone.name}
 【档位要求】${tone.guidance}$personaLine$extraLine

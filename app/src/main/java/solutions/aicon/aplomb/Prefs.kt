@@ -39,7 +39,27 @@ object Prefs {
     fun persona(c: Context): String = sp(c).getString("persona", "") ?: ""
     fun setPersona(c: Context, v: String) = sp(c).edit().putString("persona", v).apply()
 
-    /** 上次用的档位 id —— 轮盘默认高亮它。 */
+    /** 上次用的档位 id —— 选择器默认高亮它。 */
     fun lastTone(c: Context): String = sp(c).getString("last_tone", "") ?: ""
     fun setLastTone(c: Context, v: String) = sp(c).edit().putString("last_tone", v).apply()
+
+    /** 上次选的关系 id —— 默认「没有特殊关系」。 */
+    fun relationId(c: Context): String = sp(c).getString("relation_id", "none") ?: "none"
+    fun setRelationId(c: Context, v: String) = sp(c).edit().putString("relation_id", v).apply()
+
+    // ── 电池 ──────────────────────────────────────────────────────────
+    // 自带 key 时完全绕开服务器，所以这几项只在「没填 key」的路径上用。
+
+    /** 匿名设备 id —— 只用来记额度，第一次用时生成。不是广告 id。 */
+    fun deviceId(c: Context): String {
+        val saved = sp(c).getString("device_id", "") ?: ""
+        if (saved.isNotBlank()) return saved
+        val fresh = java.util.UUID.randomUUID().toString()
+        sp(c).edit().putString("device_id", fresh).apply()
+        return fresh
+    }
+
+    /** 服务器换回来的电池令牌。 */
+    fun batteryToken(c: Context): String = sp(c).getString("battery_token", "") ?: ""
+    fun setBatteryToken(c: Context, v: String) = sp(c).edit().putString("battery_token", v).apply()
 }

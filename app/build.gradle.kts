@@ -52,4 +52,6 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // Play 内购 —— 三档订阅按月续电池
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
 }

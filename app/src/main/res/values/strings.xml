@@ -73,4 +73,67 @@
     <string name="notif_title">Aplomb is standing by</string>
     <string name="notif_text">Tap the bubble to read the chat and draft a reply</string>
     <string name="notif_stop">Stop</string>
+
+    <!-- ── 新增语气档（与 iOS 一字不差） ── -->
+    <string name="tone_warm">Warm</string>
+    <string name="tone_warm_guidance">Genuinely receive what they said and move the relationship forward. Praise something specific, add a line of your own — but no flattery and no filler.</string>
+    <string name="tone_thanks">Grateful</string>
+    <string name="tone_thanks_guidance">Make the thanks concrete: what they did and what it meant to you. Don\'t stop at &#8220;thanks&#8221;, and don\'t overdo it until it becomes a burden.</string>
+    <string name="tone_yes">Yes, on it</string>
+    <string name="tone_yes_guidance">Agree cleanly and move things forward. Say exactly what you\'ll do and by when — take it on gladly, but don\'t vaguely promise the parts you can\'t control.</string>
+    <string name="tone_humor">Light</string>
+    <string name="tone_humor_guidance">Defuse with lightness and a bit of self-deprecation. Jokes land on the situation, never the person — no sarcasm as a weapon. If it genuinely isn\'t funny, don\'t force it.</string>
+    <string name="tone_comfort">Comforting</string>
+    <string name="tone_comfort_guidance">For when they\'re hurting. Receive the feeling first; don\'t rush to advice or logic. Talk like a person — no slogans, no breezy &#8220;it\'ll be fine&#8221;.</string>
+    <string name="tone_ask">Clarify</string>
+    <string name="tone_ask_guidance">Don\'t commit while the information is thin. Ask the one or two things that decide it (what, by when, how much) and put the ball politely back in their court.</string>
+
+    <!-- ── 关系 ── -->
+    <string name="sec_relations">Who you\'re talking to</string>
+    <string name="relations_help">Pick the relationship before a tone. &#8220;Hard line&#8221; to your boss and to your partner are not the same message.</string>
+    <string name="rel_add">＋ Add a relationship</string>
+    <string name="rel_edit">Edit relationship</string>
+    <string name="rel_reset">Restore default relationships</string>
+    <string name="rel_full">10 relationships is the maximum</string>
+    <string name="rel_name_hint">Name, e.g. &#8220;Landlord&#8221;</string>
+    <string name="rel_guidance_hint">What to keep in mind with this person (written for the AI)</string>
+    <string name="rel_none">Default</string>
+    <string name="rel_none_guidance">No relationship context added</string>
+    <string name="rel_family">Family</string>
+    <string name="rel_family_guidance">You can\'t opt out of family; anything said harshly you\'ll live with for years. Be direct, set a boundary — but don\'t drag up old grievances or pass judgment on who they are. Settle this one thing; keeping the relationship matters more than winning this round.</string>
+    <string name="rel_friend">Friend</string>
+    <string name="rel_friend_guidance">Equals, no hierarchy. You can be candid, jokes and self-deprecation are fine — but don\'t use &#8220;we\'re close&#8221; as licence to decide for them or to overstep.</string>
+    <string name="rel_partner">Partner</string>
+    <string name="rel_partner_guidance">Feelings weigh more than logic here. Receive how they feel before addressing the thing itself; no old grievances, no character verdicts, no silent treatment or ultimatums.</string>
+    <string name="rel_client">Client</string>
+    <string name="rel_client_guidance">There\'s a commercial boundary. Hold scope, dates and price; polite but not free. Put in writing whatever needs to be, so a verbal aside doesn\'t become an obligation.</string>
+    <string name="rel_boss">Boss</string>
+    <string name="rel_boss_guidance">There\'s a power gap; pushing back head-on costs you. Don\'t defy, but don\'t silently accept a request they left vague either. Put cost, schedule and priority on the table and let them choose between options rather than you absorbing it alone.</string>
+
+    <!-- ── 选择器 ── -->
+    <string name="picker_who">Who are they?</string>
+    <string name="picker_tone">How do you want to say it?</string>
+
+    <!-- ── 电池 / 订阅 ── -->
+    <string name="sec_battery">Battery</string>
+    <string name="battery_free">Free battery %1$d/%2$d</string>
+    <string name="battery_month">This month %1$d/%2$d</string>
+    <string name="battery_empty">Battery is empty</string>
+    <string name="battery_claiming">Getting your free battery…</string>
+    <string name="battery_own_key">Using your own API key</string>
+    <string name="battery_help">One draft costs one bar. Subscribe for a monthly refill, or use your own API key above — both work.</string>
+    <string name="battery_topup">Top up</string>
+    <string name="battery_offline">Network unavailable — try again</string>
+    <string name="sub_title">Recharged every month</string>
+    <string name="sub_sub">One draft costs one bar. Pick a plan and it refills monthly.</string>
+    <string name="sub_bars">%1$d bars per month</string>
+    <string name="sub_current">Current plan: %1$s</string>
+    <string name="sub_restore">Restore purchases</string>
+    <string name="sub_loading">Loading plans…</string>
+    <string name="sub_unavailable">Google Play billing is unavailable on this device</string>
+    <string name="sub_terms">Auto-renews monthly. Cancel any time in Play Store subscriptions.</string>
+    <string name="sub_byok">Rather not subscribe? Put your own API key in above — same features, your account.</string>
+    <string name="tier_lite">Light</string>
+    <string name="tier_plus">Regular</string>
+    <string name="tier_pro">Heavy</string>
 </resources>

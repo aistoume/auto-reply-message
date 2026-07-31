@@ -56,7 +56,7 @@ class BubbleService : Service() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private lateinit var windowManager: WindowManager
     private var bubble: View? = null
-    private var wheel: ToneWheelView? = null
+    private var wheel: TonePickerView? = null
     private var projection: MediaProjection? = null
     private var capture: ScreenCaptureManager? = null
 
@@ -216,12 +216,11 @@ class BubbleService : Service() {
 
     private fun openWheel() {
         if (wheel != null) return
-        val b = bubble ?: return
-        val loc = IntArray(2); b.getLocationOnScreen(loc)
-        val v = ToneWheelView(
-            this, loc[0] + b.width / 2f, loc[1] + b.height / 2f,
-            ToneConfig.load(this),
-            onSelect = { tone -> closeWheel(); runTone(tone) },
+        // 面板从屏幕底部整幅弹出，不再围着悬浮球铺 —— 球贴边时轮盘有一半
+        // 格子会被挤出屏外，档位到十个之后这个问题没法再回避。
+        val v = TonePickerView(
+            this,
+            onPick = { relation, tone -> closeWheel(); runTone(tone, relation) },
             onDismiss = { closeWheel() },
         )
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -246,23 +245,29 @@ class BubbleService : Service() {
 
     // ── 出稿 ───────────────────────────────────────────────────────────
 
-    private fun runTone(tone: Tone) {
+    private fun runTone(tone: Tone, relation: Tone? = null) {
         val b64 = lastShotB64 ?: return
-        if (Prefs.activeKey(this).isBlank()) {
-            toast(getString(R.string.need_key)); return
-        }
+        // 不再强制自带 key —— 没填就走免费电池，额度耗尽时由服务端回一句
+        // 明确的提示，比在这里拦下来更有用。
+        val rel = relation ?: RelationConfig.current(this)
         Prefs.setLastTone(this, tone.id)
         ReplyCard.showStatus(this, windowManager, getString(R.string.card_thinking, tone.name))
         scope.launch {
-            val draft = withContext(Dispatchers.IO) { ReplyEngine.draft(this@BubbleService, b64, tone) }
+            val out = withContext(Dispatchers.IO) {
+                ReplyEngine.draft(this@BubbleService, b64, tone, rel)
+            }
+            val draft = out.draft
             if (draft == null) {
-                ReplyCard.showStatus(this@BubbleService, windowManager, getString(R.string.card_failed))
+                ReplyCard.showStatus(
+                    this@BubbleService, windowManager,
+                    out.error ?: getString(R.string.card_failed),
+                )
                 return@launch
             }
             ReplyCard.show(
                 this@BubbleService, windowManager, draft, tone, null,
                 ToneConfig.load(this@BubbleService),
-                onTone = { t -> runTone(t) },              // 换档即时重出
+                onTone = { t -> runTone(t, rel) },         // 换档即时重出，关系保持不变
                 onInsert = { text -> insert(text) },
             )
         }

@@ -143,11 +143,15 @@ async function battery(request, env) {
 // ── 订阅 ───────────────────────────────────────────────────────────────────
 
 /**
- * 用 App Store 的签名交易换本月的电池。
+ * 用商店的购买凭据换本月的电池。苹果和 Google 都走这一个入口。
  *
- * 验签走苹果官方的 App Store Server API：把 transactionId 报给苹果，
- * 由苹果告诉我们这笔订阅当前是不是有效。**没配好密钥时一律拒绝发电**
- * —— 宁可用户暂时买不了，也不能因为「先信着」被人白嫖算力。
+ * 验签一律交给商店官方接口：苹果报 transactionId 给 App Store Server API，
+ * Google 报 purchaseToken 给 Play Developer API，由商店告诉我们这笔订阅当前
+ * 是不是有效。**没配好密钥时一律拒绝发电** —— 宁可用户暂时买不了，也不能
+ * 因为「先信着」被人白嫖算力。
+ *
+ * 两边商品 id 是同一套（aplomb.sub.*），所以只有验签这一步分平台，档位表和
+ * 发电逻辑完全共用。
  */
 async function subscribe(request, env) {
   const { acct, token, error } = await loadAccount(request, env);
@@ -155,9 +159,11 @@ async function subscribe(request, env) {
 
   const body = await request.json().catch(() => ({}));
   const productId = String(body.productId ?? '');
-  const transactionId = String(body.transactionId ?? '');
+  const store = String(body.store ?? 'appstore');
+  // 苹果给 transactionId，Google 给 purchaseToken
+  const receipt = String(body.transactionId ?? body.purchaseToken ?? '');
   const tier = TIERS[productId];
-  if (!tier || !transactionId) return json({ error: 'bad product' }, 400);
+  if (!tier || !receipt) return json({ error: 'bad product' }, 400);
 
   // 测试通道：拿得到 DEV_GRANT_KEY（wrangler secret）才放行。
   // 存在的理由是 App Store Connect 那套建起来之前也得能验完整链路；
@@ -167,7 +173,9 @@ async function subscribe(request, env) {
 
   let verdict = { ok: true, expiresAt: null };
   if (!isDev) {
-    verdict = await verifyWithApple(env, transactionId, productId);
+    verdict = store === 'play'
+      ? await verifyWithGoogle(env, receipt, productId)
+      : await verifyWithApple(env, receipt, productId);
     if (!verdict.ok) {
       return json({ error: 'verify_failed', message: verdict.message }, 402);
     }
@@ -253,6 +261,100 @@ async function appleJwt(env) {
   const sigB64 = btoa(String.fromCharCode(...new Uint8Array(sig)))
     .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   return `${signingInput}.${sigB64}`;
+}
+
+// ── Google Play 校验 ──────────────────────────────────────────────────────
+
+/**
+ * 用 Play Developer API 查这笔订阅当前是否有效。
+ *
+ * 和苹果的差别：Google 不接受直接用 service account 的 JWT 调业务接口，
+ * 得先拿 JWT 去 oauth2 换一个 access token，再拿 token 调 API。多一跳。
+ *
+ * 需要的 secret：
+ *   GOOGLE_SA_EMAIL       service account 邮箱
+ *   GOOGLE_SA_PRIVATE_KEY 那把 PEM 私钥（JSON 凭据里的 private_key 字段）
+ *   ANDROID_PACKAGE       solutions.aicon.aplomb
+ */
+async function verifyWithGoogle(env, purchaseToken, productId) {
+  const { GOOGLE_SA_EMAIL, GOOGLE_SA_PRIVATE_KEY, ANDROID_PACKAGE } = env;
+  if (!GOOGLE_SA_EMAIL || !GOOGLE_SA_PRIVATE_KEY) {
+    // 失败关闭，和苹果那条路一致。
+    return { ok: false, message: '服务端还没配好 Google Play 校验密钥，暂时无法开通。' };
+  }
+  const pkg = ANDROID_PACKAGE || 'solutions.aicon.aplomb';
+
+  const accessToken = await googleAccessToken(env);
+  if (!accessToken) return { ok: false, message: 'Google 授权失败，稍后再试。' };
+
+  const res = await fetch(
+    `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${encodeURIComponent(pkg)}` +
+      `/purchases/subscriptionsv2/tokens/${encodeURIComponent(purchaseToken)}`,
+    { headers: { authorization: `Bearer ${accessToken}` } },
+  );
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    return { ok: false, message: `Google Play 校验失败（${res.status}）${text.slice(0, 120)}` };
+  }
+  const data = await res.json();
+
+  // SUBSCRIPTION_STATE_ACTIVE 正常，_IN_GRACE_PERIOD 是扣款失败但还没断服务。
+  const state = data.subscriptionState;
+  if (state !== 'SUBSCRIPTION_STATE_ACTIVE' && state !== 'SUBSCRIPTION_STATE_IN_GRACE_PERIOD') {
+    return { ok: false, message: '这笔订阅在 Google Play 查不到或已失效。' };
+  }
+  // 一个 token 下可能挂多个 line item（升降档时），认我们要的那个商品。
+  const line = (data.lineItems ?? []).find((l) => l.productId === productId);
+  if (!line) return { ok: false, message: '这笔订阅和所选套餐不匹配。' };
+
+  const expiresAt = line.expiryTime ? Date.parse(line.expiryTime) : null;
+  return { ok: true, expiresAt: Number.isFinite(expiresAt) ? expiresAt : null };
+}
+
+/** service account JWT → OAuth2 access token（RS256，和苹果的 ES256 不是一套）。 */
+async function googleAccessToken(env) {
+  const now = Math.floor(Date.now() / 1000);
+  const header = { alg: 'RS256', typ: 'JWT' };
+  const claims = {
+    iss: env.GOOGLE_SA_EMAIL,
+    scope: 'https://www.googleapis.com/auth/androidpublisher',
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: now,
+    exp: now + 3600,
+  };
+  const b64u = (obj) =>
+    btoa(JSON.stringify(obj)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const signingInput = `${b64u(header)}.${b64u(claims)}`;
+
+  // JSON 凭据里的 private_key 带字面量 \n，直接喂给 atob 会炸。
+  const pem = String(env.GOOGLE_SA_PRIVATE_KEY)
+    .replace(/\\n/g, '\n')
+    .replace(/-----[^-]+-----/g, '')
+    .replace(/\s+/g, '');
+  const der = Uint8Array.from(atob(pem), (c) => c.charCodeAt(0));
+  const key = await crypto.subtle
+    .importKey('pkcs8', der, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign'])
+    .catch(() => null);
+  if (!key) return null;
+
+  const sig = await crypto.subtle.sign(
+    'RSASSA-PKCS1-v1_5', key, new TextEncoder().encode(signingInput),
+  );
+  const sigB64 = btoa(String.fromCharCode(...new Uint8Array(sig)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const assertion = `${signingInput}.${sigB64}`;
+
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion,
+    }),
+  });
+  if (!res.ok) return null;
+  const out = await res.json().catch(() => ({}));
+  return out.access_token ?? null;
 }
 
 /** 只取 JWS 的 payload —— 签名本身已由苹果的接口背书。 */

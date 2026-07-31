@@ -73,4 +73,67 @@
     <string name="notif_title">嘴替正在待命</string>
     <string name="notif_text">点悬浮球读当前聊天并拟稿</string>
     <string name="notif_stop">停止</string>
+
+    <!-- ── 新增语气档（与 iOS 一字不差） ── -->
+    <string name="tone_warm">热情</string>
+    <string name="tone_warm_guidance">真心接住对方的好意或消息，把关系往前推一步。可以具体夸到点子上、可以主动多说一句，但不谄媚、不说空话套话。</string>
+    <string name="tone_thanks">感谢</string>
+    <string name="tone_thanks_guidance">把谢意说具体：谢对方做的哪一件事、对你意味着什么。别停在「谢谢」两个字，也别夸张到让对方有负担。</string>
+    <string name="tone_yes">爽快</string>
+    <string name="tone_yes_guidance">干脆答应，把事往前推。明确说清你会做什么、什么时候给——痛快接下但不含糊承诺没把握的部分。</string>
+    <string name="tone_humor">幽默</string>
+    <string name="tone_humor_guidance">用轻松和自嘲化解，把气氛带回来。玩笑对事不对人，不阴阳怪气、不用讽刺当武器；如果这事根本笑不出来，就别硬开玩笑。</string>
+    <string name="tone_comfort">安慰</string>
+    <string name="tone_comfort_guidance">对方在难受或诉苦时用。先接住情绪、别急着给建议或讲道理；说人话，不喊口号，不轻飘飘地说「都会好的」。</string>
+    <string name="tone_ask">追问</string>
+    <string name="tone_ask_guidance">信息不够就先别表态。问到关键的那一两点（要什么、什么时候、多少），把球礼貌地推回去，问完再决定。</string>
+
+    <!-- ── 关系 ── -->
+    <string name="sec_relations">对方是谁</string>
+    <string name="relations_help">选完关系再选语气。对老板「掀桌」和对恋人「掀桌」，根本不是同一句话。</string>
+    <string name="rel_add">＋ 添加关系</string>
+    <string name="rel_edit">修改关系</string>
+    <string name="rel_reset">恢复默认关系</string>
+    <string name="rel_full">最多 10 个关系</string>
+    <string name="rel_name_hint">名称，如「房东」</string>
+    <string name="rel_guidance_hint">和这个人说话要注意什么（写给 AI 看）</string>
+    <string name="rel_none">默认</string>
+    <string name="rel_none_guidance">不附加关系设定</string>
+    <string name="rel_family">家人</string>
+    <string name="rel_family_guidance">血缘关系断不掉，话说重了要长期承受。可以直接、可以划界限，但别翻旧账、别下人格定论；把这一件事说清楚就够，保住关系比赢这一局重要。</string>
+    <string name="rel_friend">朋友</string>
+    <string name="rel_friend_guidance">平等关系，没有上下级。可以坦率，允许一点玩笑和自嘲；但别拿「关系好」当借口替对方做决定或替自己越界。</string>
+    <string name="rel_partner">恋人</string>
+    <string name="rel_partner_guidance">情绪的分量大于道理。先接住对方的感受，再讲事情本身；不翻旧账、不做人身评判、不用冷暴力和最后通牒。</string>
+    <string name="rel_client">客户</string>
+    <string name="rel_client_guidance">有明确的商业边界。守住范围、节点、价钱三件事；客气但不白让，该书面确认的说清楚，别让口头承诺变成默认义务。</string>
+    <string name="rel_boss">老板</string>
+    <string name="rel_boss_guidance">存在权力差，硬顶没好处。不顶撞，但也别默认接受没说清的要求；把成本、排期、优先级摆到台面上，让对方在几个选项里选，而不是你单方面吞下。</string>
+
+    <!-- ── 选择器 ── -->
+    <string name="picker_who">对方是谁？</string>
+    <string name="picker_tone">想怎么说？</string>
+
+    <!-- ── 电池 / 订阅 ── -->
+    <string name="sec_battery">电池</string>
+    <string name="battery_free">免费电池 %1$d/%2$d</string>
+    <string name="battery_month">本月 %1$d/%2$d</string>
+    <string name="battery_empty">电池用完了</string>
+    <string name="battery_claiming">正在领取免费电池…</string>
+    <string name="battery_own_key">正在用你自己的 API key</string>
+    <string name="battery_help">一次拟稿耗一格。可以订阅按月续电，也可以在上面填自己的 API key——两条路都通。</string>
+    <string name="battery_topup">去续电</string>
+    <string name="battery_offline">网络不通，稍后再试</string>
+    <string name="sub_title">按月自动续电</string>
+    <string name="sub_sub">一次拟稿耗一格。选一档，每月自动回满。</string>
+    <string name="sub_bars">每月 %1$d 格</string>
+    <string name="sub_current">当前套餐：%1$s</string>
+    <string name="sub_restore">恢复购买</string>
+    <string name="sub_loading">正在加载套餐…</string>
+    <string name="sub_unavailable">这台设备上 Google Play 内购不可用</string>
+    <string name="sub_terms">按月自动续订，随时可在 Play 商店的订阅里取消。</string>
+    <string name="sub_byok">不想订阅也行：在上面填自己的 API key，走你自己的账户，功能完全一样。</string>
+    <string name="tier_lite">轻度</string>
+    <string name="tier_plus">常用</string>
+    <string name="tier_pro">重度</string>
 </resources>
