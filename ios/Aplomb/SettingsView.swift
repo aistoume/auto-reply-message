@@ -14,6 +14,7 @@ struct SettingsView: View {
     @State private var persona = Prefs.persona
     @State private var apiKey = Prefs.apiKey
     @State private var paywall = false
+    @ObservedObject private var lang = AppLanguage.shared
 
     var body: some View {
         NavigationStack {
@@ -60,7 +61,16 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Text(L("settings.app_language.help"))
+                    Picker(L("settings.app_language"), selection: Binding(
+                        get: { lang.choice },
+                        set: { lang.set($0) }
+                    )) {
+                        ForEach(AppLanguage.Choice.allCases) { c in
+                            Text(c.label).tag(c)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    Text(L("settings.app_language.help2"))
                         .font(.caption).foregroundStyle(.secondary)
                 } header: {
                     Text(L("settings.app_language"))

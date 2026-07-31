@@ -129,3 +129,6 @@
 "common.cancel" = "Cancel";
 "common.save" = "Save";
 "common.close" = "Close";
+
+"lang.system" = "System";
+"settings.app_language.help2" = "Takes effect immediately — no restart needed.";

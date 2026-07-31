@@ -129,3 +129,6 @@
 "common.cancel" = "取消";
 "common.save" = "保存";
 "common.close" = "关闭";
+
+"lang.system" = "跟随系统";
+"settings.app_language.help2" = "改完立刻生效，不用重启。";

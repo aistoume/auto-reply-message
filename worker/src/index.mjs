@@ -159,9 +159,21 @@ async function subscribe(request, env) {
   const tier = TIERS[productId];
   if (!tier || !transactionId) return json({ error: 'bad product' }, 400);
 
-  const verdict = await verifyWithApple(env, transactionId, productId);
-  if (!verdict.ok) {
-    return json({ error: 'verify_failed', message: verdict.message }, 402);
+  // 测试通道：拿得到 DEV_GRANT_KEY（wrangler secret）才放行。
+  // 存在的理由是 App Store Connect 那套建起来之前也得能验完整链路；
+  // 用密钥而不是「debug 开关」把门，是因为开关一旦忘记关就是无限白嫖。
+  const devKey = String(body.devKey ?? '');
+  const isDev = env.DEV_GRANT_KEY && devKey && devKey === env.DEV_GRANT_KEY;
+
+  let verdict = { ok: true, expiresAt: null };
+  if (!isDev) {
+    verdict = await verifyWithApple(env, transactionId, productId);
+    if (!verdict.ok) {
+      return json({ error: 'verify_failed', message: verdict.message }, 402);
+    }
+  } else {
+    // 测试授权按 30 天算一个周期，好观察到期与续期行为
+    verdict = { ok: true, expiresAt: Date.now() + 30 * 86400_000 };
   }
 
   const raw = await env.APLOMB.get(`token:${token}`);

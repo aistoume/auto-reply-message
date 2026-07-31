@@ -10,6 +10,8 @@ import SwiftUI
 struct RootView: View {
     enum Tab: Int { case tones, draft, settings }
     @State private var tab: Tab = .draft
+    /// 订阅语言变化 —— 切了语言这里一刷新，下面所有 L() 都重取
+    @ObservedObject private var lang = AppLanguage.shared
 
     var body: some View {
         VStack(spacing: 0) {
@@ -28,6 +30,7 @@ struct RootView: View {
             .padding(.top, 6)
             .background(.bar)
         }
+        .id(lang.choice)   // 换语言即重建视图树，避免个别文案没刷新
     }
 
     private func item(_ t: Tab, _ icon: String, _ title: String) -> some View {
