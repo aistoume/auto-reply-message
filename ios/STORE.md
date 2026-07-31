@@ -10,7 +10,7 @@ App ID `6796817769` · Bundle ID `solutions.aicon.aplomb` · 商店名 `Aplomb -
 
 | 字段 | 填 |
 |---|---|
-| **Subtitle**（30 字符） | `AI drafts the hard reply` |
+| **Subtitle**（30 字符） | `AI drafts hard chat replies` |
 | Subtitle 简中 | `难回的消息，AI 替你说` |
 | **Primary Category** | Productivity |
 | **Secondary Category** | Social Networking |
@@ -173,8 +173,8 @@ reply,message,chat,tone,draft,wording,assistant,translate,awkward,boss,client,te
 
 | 字段 | 填 | 状态 |
 |---|---|---|
-| **Support URL**（必填） | `https://aicon.solutions/aplomb/support` | ⚠️ 页面还没建，见「五」 |
-| **Marketing URL**（可选） | `https://aicon.solutions/aplomb` | ⚠️ 同上 |
+| **Support URL**（必填） | `https://aicon.solutions/aplomb/support` | ✅ 已上线 |
+| **Marketing URL**（可选） | `https://aicon.solutions/aplomb` | ✅ 已上线 |
 
 ### Version / Copyright
 
@@ -237,8 +237,8 @@ Three auto-renewable subscriptions (Light / Regular / Heavy) refill the monthly 
 
 ## 五、⚠️ 上架前必须先解决的三件事
 
-### 1. Privacy Policy URL —— 硬性必填，没有直接卡住提交
-`https://aicon.solutions/aplomb/privacy` 这个页面**目前不存在**。
+### 1. ~~Privacy Policy URL~~ ✅ 已上线
+`https://aicon.solutions/aplomb/privacy`、`/aplomb/support`、`/aplomb` 三个页面都已部署。
 
 ### 2. 订阅页必须有可点击的「服务条款」和「隐私政策」链接
 Guideline 3.1.2 明文要求，订阅类 app **最常见的拒绝原因**。目前 `PaywallView.swift` 里那两行只是纯文字，不是链接。→ 已改，见 commit。
