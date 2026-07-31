@@ -40,6 +40,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DD0000000000000000000002 /* Exceptions for "Aplomb" folder in "Aplomb" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Aplomb.storekit,
+			);
+			target = AA0000000000000000000005 /* Aplomb */;
+		};
 		DD0000000000000000000001 /* Exceptions for "AplombKeyboard" folder in "AplombKeyboard" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -52,6 +59,9 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AA000000000000000000000F /* Aplomb */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DD0000000000000000000002 /* Exceptions for "Aplomb" folder in "Aplomb" target */,
+			);
 			path = Aplomb;
 			sourceTree = "<group>";
 		};
