@@ -210,8 +210,8 @@ struct DraftView: View {
 
                     // ── 先定关系，再挑语气 ──
                     if model.shot != nil {
-                        RelationRowView(relations: relations, selectedId: $relationId)
-                        ToneRowView(tones: tones, active: model.activeTone) { tone in
+                        RelationGridView(relations: relations, selectedId: $relationId)
+                        ToneGridView(tones: tones, active: model.activeTone) { tone in
                             Task {
                                 await model.run(
                                     tone: tone,
